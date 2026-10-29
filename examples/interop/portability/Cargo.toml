@@ -1,0 +1,23 @@
+[package]
+name = "donna-send-portability"
+version = "0.0.0"
+edition = "2024"
+license = "Apache-2.0"
+authors = ["ocku"]
+publish = false
+
+[workspace]
+
+[[test]]
+name = "send-portability"
+path = "send_harness.rs"
+
+[dependencies]
+nix = { version = "=0.31.3", default-features = false, features = ["socket", "net", "uio"] }
+socket2 = { version = "=0.6.5", features = ["all"] }
+tokio = { version = "=1.53.1", features = ["net", "io-util", "time", "rt", "rt-multi-thread", "sync", "tracing", "macros", "test-util"] }
+tracing = "=0.1.44"
+
+[profile.release]
+lto = false
+codegen-units = 16

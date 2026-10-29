@@ -1,0 +1,12 @@
+# Isolated lab authority. Mount another fixture at /suite/fixtures/basic/zone.db to compare it.
+listen_addrs_ipv4 = ["0.0.0.0"]
+listen_addrs_ipv6 = []
+listen_port = 53
+directory = "/suite"
+drop_privileges = false
+
+[[zones]]
+zone = "example.test."
+zone_type = "Primary"
+file = "fixtures/basic/zone.db"
+axfr_policy = "AllowAll"

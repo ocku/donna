@@ -1,0 +1,16 @@
+role = "authoritative"
+
+[[listen]]
+protocol = "udp"
+address = "@LISTEN_ADDRESS@"
+
+[[listen]]
+protocol = "tcp"
+address = "@LISTEN_ADDRESS@"
+
+[[zones]]
+origin = "example.test."
+file = "/usr/share/donna/zones/example.test.zone"
+
+[authority]
+allow_transfer = []

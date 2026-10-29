@@ -1,0 +1,36 @@
+#!/sbin/openrc-run
+
+description="Donna DNS server"
+command="/usr/local/bin/donna"
+config="${config:-/etc/donna/donna.toml}"
+command_args="serve -c \"${config}\""
+command_background=true
+command_user="donna:donna"
+pidfile="/run/${RC_SVCNAME}.pid"
+output_log="/var/log/donna/donna.log"
+error_log="/var/log/donna/donna.log"
+extra_started_commands="reload"
+extra_commands="checkconfig"
+export RUST_LOG="${RUST_LOG:-info}"
+
+depend() {
+    need net
+    use logger
+    provide dns
+}
+
+checkconfig() {
+    "${command}" check -c "${config}"
+}
+
+start_pre() {
+    checkpath --directory --mode 0750 --owner donna:donna /var/log/donna || return 1
+    checkconfig
+}
+
+reload() {
+    checkconfig || return 1
+    ebegin "Reloading Donna configuration and zones"
+    start-stop-daemon --signal HUP --pidfile "${pidfile}"
+    eend $?
+}

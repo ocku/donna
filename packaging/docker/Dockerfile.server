@@ -1,0 +1,64 @@
+ARG RUST_IMAGE=rust:bookworm
+
+# Build the daemon and its CLI commands.
+FROM ${RUST_IMAGE} AS builder
+
+WORKDIR /source
+
+COPY Cargo.toml Cargo.lock ./
+COPY src src
+COPY config config
+COPY crates crates
+COPY vendor vendor
+
+RUN cargo build \
+    --locked \
+    --release \
+    --bin donna
+
+# Shared runtime for all server roles.
+FROM debian:bookworm-slim AS server
+
+LABEL org.opencontainers.image.licenses="Apache-2.0" \
+    org.opencontainers.image.authors="ocku"
+
+RUN groupadd --gid 10001 donna \
+    && useradd \
+        --uid 10001 \
+        --gid donna \
+        --no-create-home \
+        --shell /usr/sbin/nologin \
+        donna \
+    && mkdir -p /etc/donna
+
+COPY --from=builder /source/target/release/donna /usr/local/bin/donna
+COPY LICENSE NOTICE /usr/share/licenses/donna/
+COPY packaging/docker/entrypoint.sh /usr/local/bin/donna-server
+
+RUN chmod 0755 /usr/local/bin/donna-server
+
+COPY packaging/docker/config/ /usr/share/donna/config/
+COPY config/example.test.zone /usr/share/donna/zones/example.test.zone
+
+ENV DONNA_ROLE=recursive \
+    RUST_LOG=info
+
+USER 10001:10001
+
+EXPOSE 5353/udp 5353/tcp
+
+ENTRYPOINT ["/usr/local/bin/donna-server"]
+CMD []
+
+# Select the default policy for each image target.
+FROM server AS forward
+
+ENV DONNA_ROLE=forward
+
+FROM server AS authoritative
+
+ENV DONNA_ROLE=authoritative
+
+FROM server AS recursive
+
+ENV DONNA_ROLE=recursive

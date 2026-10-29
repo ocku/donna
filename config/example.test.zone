@@ -1,0 +1,10 @@
+$ORIGIN example.test.
+$TTL 300
+@ IN SOA ns hostmaster (1 3600 600 86400 300)
+  IN NS ns
+ns IN A 192.0.2.53
+@ IN A 192.0.2.80
+www IN CNAME example.test.
+@ IN MX 10 mail
+mail IN A 192.0.2.25
+@ IN TXT "Served by Donna"

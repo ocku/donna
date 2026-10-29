@@ -1,0 +1,30 @@
+Source: the crates.io quinn-proto 0.11.19 package, without its generated lockfile
+or registry cache markers. The upstream MIT and Apache-2.0 licenses are retained.
+Upstream repository: https://github.com/quinn-rs/quinn
+Crates.io package checksum:
+0e750cca55fe4f0439a15d0bb529da9651e79993e8e72c61a899a36d462befbe
+
+Local changes: src/connection/mod.rs limits pad_to_mtu to ACK-eliciting packets;
+src/tests/mod.rs adds a deterministic regression that decodes the frames in a
+padded peer's response to PING and requires a pure ACK without PADDING.
+ACK-only packets padded by upstream consume congestion credit without eliciting
+an acknowledgement or arming PTO after address validation. Large DNS requests
+can then leave the server unable to transmit its response. This patch retains
+QUIC packet padding for application data without padding pure acknowledgements.
+Loss-probe padding exceptions and QUIC congestion control remain upstream code.
+
+The root Cargo.toml applies this patch only to the existing quinn-proto package.
+The vendored crate is excluded from workspace membership. No dependency version
+or cryptographic implementation is changed.
+
+Regression coverage lives in crates/transport/src/doq/tests/:
+- padding.rs observes padded 1-RTT packets in both directions, including real
+  TSIG transactions and messages without EDNS.
+- protocol.rs exchanges maximum-length DNS messages on a reused connection.
+- transfers.rs covers concurrent AXFR/IXFR streams and transfer limits.
+
+Run the upstream protocol engine tests and the deterministic regression with:
+cargo test --manifest-path vendor/quinn-proto/Cargo.toml --no-default-features --features rustls-ring --lib
+
+When upgrading Quinn, compare the upstream padding implementation with this
+change and rerun those regressions before removing or updating the patch.

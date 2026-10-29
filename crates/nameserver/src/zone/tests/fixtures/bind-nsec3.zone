@@ -1,0 +1,423 @@
+; File written on Tue Oct 27 01:02:44 2026
+; dnssec_signzone version 9.18.49-1~deb12u2-Debian
+example.test.		300	IN SOA	ns.example.test. hostmaster.example.test. (
+					1          ; serial
+					3600       ; refresh (1 hour)
+					900        ; retry (15 minutes)
+					1209600    ; expire (2 weeks)
+					30         ; minimum (30 seconds)
+					)
+			300	RRSIG	SOA 13 2 300 (
+					20261028010244 20261027000244 53747 example.test.
+					7osZ8hwBdpTsheIl0j2uKQO6S2xWD3BC6sJl
+					ko4KK/UIxWwFQxp7n6DdNq7gYyuj2dkhpsNr
+					7+qTE8RqcySLWA== )
+			300	NS	ns.example.test.
+			300	RRSIG	NS 13 2 300 (
+					20261028010244 20261027000244 53747 example.test.
+					nyeLV6t9DGiA4OFgMTFp9qvHanuFnlo2usmj
+					Cxd6LdDvzx8lVzVRYox48Z5vgSk+PmQgtOyF
+					ABOrEZQkvN0z6Q== )
+			300	A	192.0.2.1
+			300	RRSIG	A 13 2 300 (
+					20261028010244 20261027000244 53747 example.test.
+					0qjMWMbi6A2sbPZmcSPqWfquXf1ip1ovskNi
+					GMxNfvLCm6YcxL4OfsG5rXxXIa7RNAHgSDkJ
+					wNsFoYz98vFOzw== )
+			300	MX	10 mail.example.test.
+			300	RRSIG	MX 13 2 300 (
+					20261028010244 20261027000244 53747 example.test.
+					FjCAj+2H3AbsH9Apl7UzzttJfDbbP5OITsGW
+					cR1VAOLAFOW/c/X28OVI63+jgBmqCmk/LyaJ
+					gU6S6A/vQEQuVw== )
+			300	DNSKEY	256 3 13 (
+					j+99jTMendRY4HsScEAl2vl+FUqjvgphu7bM
+					B3bNJWu2AZwe27NiRR5WxoB1Gw3/N2VZfH3M
+					qbJb5f7+iIMQtg==
+					) ; ZSK; alg = ECDSAP256SHA256 ; key id = 53747
+			300	DNSKEY	257 3 13 (
+					SW6tIwXrc8Ck9TJTf5AklnJNfhVV7AxJkwrR
+					vCWSnEo6belr83Uzb2pzp4oHy0XTCgKWykV7
+					RAz0mYNs+LnlLA==
+					) ; KSK; alg = ECDSAP256SHA256 ; key id = 37779
+			300	RRSIG	DNSKEY 13 2 300 (
+					20261028010244 20261027000244 37779 example.test.
+					TPizlYYwVRMVYgXNjHyuHcIV4jqKQwXASIDF
+					m4Z8Fick2J8sISk6FofbjtUsnmLcDJff3TWB
+					rKRizp82NhH/NA== )
+			300	RRSIG	DNSKEY 13 2 300 (
+					20261028010244 20261027000244 53747 example.test.
+					8gU3HW0QjSnJq2T9YXAvH+WrBFHR8g2XsW46
+					6JIj1ofYVJFWOtXzsEI+ua9qvVfM+UD4XAtc
+					lJj4ICnshqt/+A== )
+			0	NSEC3PARAM 1 0 0 A1B2
+			0	RRSIG	NSEC3PARAM 13 2 0 (
+					20261028010244 20261027000244 53747 example.test.
+					jQ3Nu8KqOAb2ockq0GmBAvVpRXmadn6w2RWB
+					ZcMGbEUw8AyLOMnUA/W30K4p7P3OwGw51e4B
+					0UsGoVwmtzhBRA== )
+			300	CAA	0 issue "ca.example.test"
+			300	RRSIG	CAA 13 2 300 (
+					20261028010244 20261027000244 53747 example.test.
+					Y5DOIkcd2rF8v+m3wJubb5ElffrbXyMVaf+e
+					KqkDNCEPm4SU+845FD2ipqd8InPcnprZJhet
+					1QTrFUGQqRqbOw== )
+_sip._tcp.example.test.	300	IN SRV	0 5 5060 www.example.test.
+			300	RRSIG	SRV 13 4 300 (
+					20261028010244 20261027000244 53747 example.test.
+					VgOO03wBsbp+kWyz5xPo7i5SjRpSSkapJYDd
+					l4h/8brS13l9Tt087nyb/XecwFwDlouSXjrt
+					nGA/ZMPjVlXNJQ== )
+alias.example.test.	300	IN CNAME www.example.test.
+			300	RRSIG	CNAME 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					waLJyyeMzWn9cepfb7kG/clR692V9BQ8SjqD
+					EWVvv3RA8fqYmWMVUfGFFN9hx3iuWCzhc1Lb
+					YtLFKDRtiH7E8A== )
+alias-empty.example.test. 300	IN CNAME empty.example.test.
+			300	RRSIG	CNAME 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					3OFK6cBSwpmIYAtNoB+sd6sh8UQX142Fl1jK
+					53GU8Uup3q8TzJ+Swie5s5oYcb2CAj7P2Rz5
+					vye+bgZ9kgZ4Xg== )
+child.example.test.	300	IN NS	ns.child.example.test.
+ns.child.example.test.	300	IN A	192.0.2.53
+delegated-alias.example.test. 300 IN CNAME www.child.example.test.
+			300	RRSIG	CNAME 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					hY+h2VGLAlj0BsHw3u34eSD1yRppO1hYdbQr
+					43zXPyLNvA4iQX70AxXn7DkAxENUXE580EXY
+					76N0CJpRKbIk3A== )
+leaf.deep.empty.example.test. 300 IN TXT "creates two empty nonterminals"
+			300	RRSIG	TXT 13 5 300 (
+					20261028010244 20261027000244 53747 example.test.
+					lUy1OaaUPzeJaY8cwUJGZHv0bvjj/RXZRfPB
+					vxbbT0NKJg5YzBhRX7iRe/JN7a1j0Cvs3K+3
+					uRpO7echkzoglA== )
+external-alias.example.test. 300 IN CNAME www.outside.test.
+			300	RRSIG	CNAME 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					/bbNCIQuDwJ3C6/jDhZUHGGqjjvKEOXkuFq6
+					2VqKFJ10XOXkHlcjjYeV/9MU5mS1IEtaA1PL
+					EFa1Il5WDbq2uQ== )
+large.example.test.	300	IN TXT	"0:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"1:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"2:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"3:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"4:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"5:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"6:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"7:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"8:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"9:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	RRSIG	TXT 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					iRT+Sn4ChT21lxOH0kRvQIfBS0yUl44sy7TU
+					K439mY/qDhblpcbqLDDf8d6AKm+loAxrYrLw
+					VF/iVpKkB04Fpg== )
+mail.example.test.	300	IN A	192.0.2.25
+			300	RRSIG	A 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					I72/5asIxuVtxdYZ/DFiTTKqE60NjXBDYQq8
+					6/5kijsAeWQKsQF6qEI8ITqEsBCDsRGJ3XIM
+					YXKaVwYqirbVWw== )
+many.example.test.	300	IN A	192.0.2.1
+			300	IN A	192.0.2.2
+			300	IN A	192.0.2.3
+			300	IN A	192.0.2.4
+			300	IN A	192.0.2.5
+			300	IN A	192.0.2.6
+			300	IN A	192.0.2.7
+			300	IN A	192.0.2.8
+			300	IN A	192.0.2.9
+			300	IN A	192.0.2.10
+			300	IN A	192.0.2.11
+			300	IN A	192.0.2.12
+			300	IN A	192.0.2.13
+			300	IN A	192.0.2.14
+			300	IN A	192.0.2.15
+			300	IN A	192.0.2.16
+			300	IN A	192.0.2.17
+			300	IN A	192.0.2.18
+			300	IN A	192.0.2.19
+			300	IN A	192.0.2.20
+			300	IN A	192.0.2.21
+			300	IN A	192.0.2.22
+			300	IN A	192.0.2.23
+			300	IN A	192.0.2.24
+			300	IN A	192.0.2.25
+			300	IN A	192.0.2.26
+			300	IN A	192.0.2.27
+			300	IN A	192.0.2.28
+			300	IN A	192.0.2.29
+			300	IN A	192.0.2.30
+			300	IN A	192.0.2.31
+			300	IN A	192.0.2.32
+			300	IN A	192.0.2.33
+			300	IN A	192.0.2.34
+			300	IN A	192.0.2.35
+			300	IN A	192.0.2.36
+			300	IN A	192.0.2.37
+			300	IN A	192.0.2.38
+			300	IN A	192.0.2.39
+			300	IN A	192.0.2.40
+			300	IN A	192.0.2.41
+			300	IN A	192.0.2.42
+			300	IN A	192.0.2.43
+			300	IN A	192.0.2.44
+			300	IN A	192.0.2.45
+			300	IN A	192.0.2.46
+			300	IN A	192.0.2.47
+			300	IN A	192.0.2.48
+			300	IN A	192.0.2.49
+			300	IN A	192.0.2.50
+			300	IN A	192.0.2.51
+			300	IN A	192.0.2.52
+			300	IN A	192.0.2.53
+			300	IN A	192.0.2.54
+			300	IN A	192.0.2.55
+			300	IN A	192.0.2.56
+			300	IN A	192.0.2.57
+			300	IN A	192.0.2.58
+			300	IN A	192.0.2.59
+			300	IN A	192.0.2.60
+			300	IN A	192.0.2.61
+			300	IN A	192.0.2.62
+			300	IN A	192.0.2.63
+			300	IN A	192.0.2.64
+			300	IN A	192.0.2.65
+			300	IN A	192.0.2.66
+			300	IN A	192.0.2.67
+			300	IN A	192.0.2.68
+			300	IN A	192.0.2.69
+			300	IN A	192.0.2.70
+			300	IN A	192.0.2.71
+			300	IN A	192.0.2.72
+			300	IN A	192.0.2.73
+			300	IN A	192.0.2.74
+			300	IN A	192.0.2.75
+			300	IN A	192.0.2.76
+			300	IN A	192.0.2.77
+			300	IN A	192.0.2.78
+			300	IN A	192.0.2.79
+			300	IN A	192.0.2.80
+			300	IN A	192.0.2.81
+			300	IN A	192.0.2.82
+			300	IN A	192.0.2.83
+			300	IN A	192.0.2.84
+			300	IN A	192.0.2.85
+			300	IN A	192.0.2.86
+			300	IN A	192.0.2.87
+			300	IN A	192.0.2.88
+			300	IN A	192.0.2.89
+			300	IN A	192.0.2.90
+			300	IN A	192.0.2.91
+			300	IN A	192.0.2.92
+			300	IN A	192.0.2.93
+			300	IN A	192.0.2.94
+			300	IN A	192.0.2.95
+			300	IN A	192.0.2.96
+			300	RRSIG	A 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					sZ+vpHP88jtx8OEJo1zi+5hYEifkU7xmkouw
+					eeDkPQXtVHT4KeS2xW9nJwmywh3QzClyPdXV
+					knjJn/fUTRILaQ== )
+ns.example.test.	300	IN A	172.29.53.20
+			300	RRSIG	A 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					FzC/OsTkjE/mad9YGsyKljWWg5O1mVsQEblN
+					zBbRaykE6sI+jXb3UWZN9bv4yr6JXLcA+ZqF
+					zX0C4FEJgVKRyw== )
+text.example.test.	300	IN TXT	"hello from an independent DNS client"
+			300	RRSIG	TXT 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					0foutOmLcsIshrRj0SavwKb46t43os1nNiUK
+					AmTfWopf9R6+kf4WRJGSZ+rBE9rIAjpd71ZF
+					3VU8SPzc3Rs9eQ== )
+*.wild.example.test.	300	IN TXT	"wildcard"
+			300	RRSIG	TXT 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					ypQNR+6AMv8Uo9ll5PyKxNIutSC8MRdRfgod
+					pdYMFZW/NR/4LCy00C7W3DnEt5p6upXX6Wj4
+					xD15Dq4RC0ZZoA== )
+a.wild.example.test.	300	IN TXT	"lower boundary"
+			300	RRSIG	TXT 13 4 300 (
+					20261028010244 20261027000244 53747 example.test.
+					USNDvAb/o9OjaTbOpPhIC7LJaGEjyC8M84YX
+					ht1YiWAzufLYoY3Gcss8bnD9ENvkuoTuXFz4
+					ytr6dfa5/FSbaQ== )
+z.wild.example.test.	300	IN TXT	"upper boundary"
+			300	RRSIG	TXT 13 4 300 (
+					20261028010244 20261027000244 53747 example.test.
+					stUzAdhsH0M30ExWIkOUeeMenLoFSfKCMxRs
+					8z2A3U239Bu7FJdaP4k9m2dOpXmdNuHdaKXi
+					PBNyxdJJG7ss9Q== )
+www.example.test.	300	IN A	192.0.2.80
+			300	RRSIG	A 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					saP73as0cwFtZzfU18wlwaeeEEPNWQUNuuEm
+					MoCpujGuiAehaq1Urf2BDwQNjKToZnLbEJU7
+					KLIKW+Y2SA5zBg== )
+			300	AAAA	2001:db8::80
+			300	RRSIG	AAAA 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					3d3ZwPD+LoLvFVfOL4VSIssDfVe950NvRYBV
+					eQJshZ5K7//grouNuoybyaq7ea3us2sPlC6v
+					byZPxOer8mXtTQ== )
+0N3E21H2O2J1IUHIKT2Q3TEC3P129OC9.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					1JIK1MCTN17VLG7R1N4SAJNSI3H6EF4I
+					CNAME RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					HiVvwpDN2mfoiLBgX1OxD0+L/czxV3flpoIO
+					ALEcwC0XM3H1iZk8fVDlU5ClvxPc2RDIJ2rT
+					iQ/lyDaOuUvrAA== )
+1JIK1MCTN17VLG7R1N4SAJNSI3H6EF4I.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					1P542I6J6HF6132H56EQI295720O3F77
+					TXT RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					5fWiNB/pYCIpMl1YBCMXBLY37XPT0N1UvxD8
+					7uKMW653pcZeq8l3UJSO0nktc5hwA0+0Y5K2
+					CCMn8NcJjVPmTg== )
+1P542I6J6HF6132H56EQI295720O3F77.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					3M5HLFH57GI07SVHRSTORP463P72131G
+					TXT RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					phQdZXXUceart07K1izk3gwgsIjCc+ItAlIc
+					X6QXa2PqPYwfiXl7gI4pofI+wINjlPxygERZ
+					8fCs3O4xLY8YqA== )
+3M5HLFH57GI07SVHRSTORP463P72131G.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					3TND21SH6DA4TN3IMMROCFQV959G2RE1
+					SRV RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					himYGIxFMeA3DSapZQKYN0P1lIUL/IF4NhWI
+					XIzjhI8rVLLWvwUbaJ5uWqjwfo0sE0VbF6lg
+					lZiK4eXlZPA6cg== )
+3TND21SH6DA4TN3IMMROCFQV959G2RE1.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					6FL84VQUB5FF78825PRNC8TM6OKNTC06
+					A RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					1m3mbIyyCQtS1MW15aqFsK1fiepAVQje/KyT
+					naWAqIMMBWgq5nQajS33rcKX4UizsAMBKRWQ
+					zrYpNLXG38Yx7g== )
+6FL84VQUB5FF78825PRNC8TM6OKNTC06.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					8FLBD6TK4PMCOIT37PQVKOHEF23V563I
+					A NS SOA MX RRSIG DNSKEY NSEC3PARAM
+					CAA )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					WtEIUyp/EVLZHWH/0FLmRlkhCwaIsPntfVO8
+					ViVvib+TwcRP+h4Ub7lXWv4jA/r3hs7MtskC
+					QGn5yiBqQtR2zA== )
+8FLBD6TK4PMCOIT37PQVKOHEF23V563I.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					92S1N704QHK0CGUQ7420ON1TILK9QAGQ
+					TXT RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					sgiXyKyK6iJVJ7XXwqZRXbwt8rOr7ZQmuyZf
+					CkUpH5ywpR1kBcZ3IzOmZ+/ZVxwBrCClKQsX
+					35M0Axj5maIm0A== )
+92S1N704QHK0CGUQ7420ON1TILK9QAGQ.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					BSKELEACPP5JF03S2D2VUQPUUDDKUI53
+					TXT RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					DC3KEuQUJoKMr8fvlNoam6+XaxZA2+5+LXdS
+					EoVo4yBAn8ZIS/j8iOxyzuqGcV85cR8odfNe
+					wdzT5K7b2lpbDA== )
+BSKELEACPP5JF03S2D2VUQPUUDDKUI53.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					C3CBKN4FBFPVL8LM223GHE8V6CF17KJ4
+					A RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					Rb+2vYDPRTvVCdvOvLYxe0TIdqe3C4bEH+V9
+					6MpJfpGqDqPht8SxN93sbkbwwD+9H2C+/jyz
+					RE0k8iqAT2JFMw== )
+C3CBKN4FBFPVL8LM223GHE8V6CF17KJ4.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					CN2EM05AM5084HSPCSOAG43LQ88CIJ7I )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					QO4V2lKOorhC0EyfbmXFT1Z6GnOFo3kixpnU
+					494FRvVbUO4Qi5UaspK0/W51JK0NOsiOhK94
+					tMZmQimZNqErww== )
+CN2EM05AM5084HSPCSOAG43LQ88CIJ7I.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					DQMUINU8M95QIM9926V08JE586FE0J8Q
+					CNAME RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					Fi9818RITNGKqFXpvzYfnqVSGZx0WLoXSOmv
+					Wo6c5cP/9MjVUqTxnn+vu3JoWQynMAFy4SB1
+					LejlHU9RfioJPQ== )
+DQMUINU8M95QIM9926V08JE586FE0J8Q.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					DSJ4CCH813KM33VE6DALE7E7JIHG16VV )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					0HTJdTTrLwDJSj+mhX17BbrO3qqgOPGAWtsl
+					vHyciWO8seYaiUhgwaxNJ6Mup4MtQjWdQZzl
+					Gusrf06j3+4WFw== )
+DSJ4CCH813KM33VE6DALE7E7JIHG16VV.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					F1I3KM5SR2UQ2M87AB4S7T4PRDHL3CBF
+					CNAME RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					CSwACHJ71nYaBXM1VDd6SUqCkBtqaAY3Qxs0
+					cbV4ZHOjI8L7tbqt9ex8+zi4PUADBeybXH3q
+					xmJMASOTNPnpLg== )
+F1I3KM5SR2UQ2M87AB4S7T4PRDHL3CBF.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					HN1D03JHRLTFV704UH4JF003ARK4KQJG
+					TXT RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					SReU7+98tSt04ExqkTcFciqCwc0qLJIRM2Tx
+					GA6aaJXZeMLaoX0xMczI9h+J/63ZdbBI5MLL
+					/BiwtDpI2GQIAA== )
+HN1D03JHRLTFV704UH4JF003ARK4KQJG.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					M3ERD12VMQGPNHCMJK6RJAKUH3B89825
+					A RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					iNFj3C/3lO+t2E/loW58dV2JQktYKcJawF0a
+					MvsBdGE2CVBAoCGu9voiLd+CdAbOyYWckJ9M
+					nNuKt6R0abi4iA== )
+M3ERD12VMQGPNHCMJK6RJAKUH3B89825.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					SB2B7BJPNHE09P32UT3MGUS1BO9UF4MN )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					l2p0JfgGps4yYpyVDWLJf3mE4v1mpoJjIgCz
+					ZETquaQdsuzuT2axTd2hID0kAOZ8/JMw+a/U
+					xFiEMtEhDXkqvg== )
+SB2B7BJPNHE09P32UT3MGUS1BO9UF4MN.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					UFQU86ST594H7OVSRVVEEK15NCOA58B8
+					TXT RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					GlQ/dIXyhCtbinbMZILT6b7rFm5l0HSWQ25U
+					95CngzNppEQQpOrjDCpxoWtkKxdyu5CUKJ4j
+					ihB/sjq6/J391A== )
+UFQU86ST594H7OVSRVVEEK15NCOA58B8.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					VDEU8VDTB56M4P4II5691QHEIN66QMSE
+					A AAAA RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					n3I0h6HpSkB2puFHPpZFlbJ/qN4n5ktggJC2
+					+ozXrEKV1VBOAVu3vGdTWBQX4WfhAcpatgY2
+					zFiigvW2E3/3gQ== )
+VDEU8VDTB56M4P4II5691QHEIN66QMSE.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					VGEDVG9OGMCHB3RQ3SJRMHQ1T1K4MU4N )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					4GmaLPJ9uvQbAXpTjN4tWfp/Hl/YGway3rmU
+					J95M2YXq35Q1BbQcNPHW31bHpDvw+xsx/qjW
+					TKFLDR+ji0TF5g== )
+VGEDVG9OGMCHB3RQ3SJRMHQ1T1K4MU4N.example.test. 30 IN NSEC3 1 1 0 A1B2 (
+					0N3E21H2O2J1IUHIKT2Q3TEC3P129OC9
+					CNAME RRSIG )
+			30	RRSIG	NSEC3 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					2le+zAH7W1wHbsrHyaLftMdYzfGHL3n31sqs
+					VK0jbhbiVkIjqA/tViYIy/qJRtJEWMVfjiGv
+					d0tgffb6gc3C0g== )

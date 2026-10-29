@@ -1,0 +1,50 @@
+[package]
+name = "donna-interop"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+authors = ["ocku"]
+publish = false
+
+[workspace]
+
+[patch.crates-io]
+quinn-proto = { path = "../../vendor/quinn-proto" }
+
+[dependencies]
+dns = { path = "../../crates/dns" }
+transport = { path = "../../crates/transport", features = ["udp", "tcp", "tls", "doh", "doq", "dnscrypt"] }
+nameserver = { path = "../../crates/nameserver" }
+resolver = { path = "../../crates/resolver" }
+tokio = { version = "1.53.1", features = ["macros", "rt-multi-thread", "signal"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std"] }
+crypto_box = { version = "0.9.1", default-features = false, features = ["chacha20", "std"] }
+ed25519-dalek = "3"
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
+
+[[bin]]
+name = "listeners"
+path = "../authority/src/listeners.rs"
+
+[[bin]]
+name = "client"
+path = "../clients/src/main.rs"
+
+[[bin]]
+name = "recursive"
+path = "../recursive/src/main.rs"
+
+[[bin]]
+name = "iterative_client"
+path = "../recursive/src/bin/iterative_client.rs"
+
+[[bin]]
+name = "updates"
+path = "../updates/src/main.rs"
+
+[[bin]]
+name = "external_backends"
+path = "../adapters/memory/src/main.rs"

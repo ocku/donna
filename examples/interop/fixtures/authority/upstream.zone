@@ -1,0 +1,15 @@
+$ORIGIN example.test.
+$TTL 300
+@ IN SOA ns.example.test. hostmaster.example.test. 1 3600 900 1209600 30
+@ IN NS ns.example.test.
+ns IN A 192.0.2.53
+* IN A 192.0.2.80
+leaf.branch IN TXT "creates an empty branch that blocks the apex wildcard"
+*.alias IN CNAME missing.branch.example.test.
+*.alias-empty IN CNAME branch.example.test.
+leaf.*.emptywild IN TXT "creates an empty wildcard source"
+*.nested IN A 192.0.2.81
+*.*.*.nested IN A 192.0.2.82
+cut IN NS ns.cut.example.test.
+ns.cut IN A 192.0.2.54
+outside.alias IN CNAME outside.invalid.

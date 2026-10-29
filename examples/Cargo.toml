@@ -1,0 +1,27 @@
+[workspace]
+members = ["authority", "clients", "recursive", "updates", "adapters/memory"]
+exclude = ["interop", "adapters/remote"]
+resolver = "3"
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+authors = ["ocku"]
+publish = false
+
+[workspace.dependencies]
+dns = { path = "../crates/dns" }
+nameserver = { path = "../crates/nameserver" }
+resolver = { path = "../crates/resolver" }
+transport = { path = "../crates/transport" }
+tokio = { version = "1.53.1", features = ["macros", "rt-multi-thread"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std"] }
+ed25519-dalek = "3"
+
+[patch.crates-io]
+quinn-proto = { path = "../vendor/quinn-proto" }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1

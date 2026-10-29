@@ -1,0 +1,18 @@
+# The unsigned full-lab hierarchy uses explicit root hints without DNSSEC.
+role = "recursive"
+
+[[listen]]
+protocol = "udp"
+address = "172.29.53.11:5301"
+
+[[listen]]
+protocol = "tcp"
+address = "172.29.53.11:5301"
+
+[access]
+recursion = ["172.29.53.0/24"]
+
+[resolver]
+root_servers = ["172.29.53.22:53"]
+validate = false
+timeout_secs = 2

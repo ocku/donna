@@ -1,0 +1,362 @@
+; File written on Tue Oct 27 01:02:44 2026
+; dnssec_signzone version 9.18.49-1~deb12u2-Debian
+example.test.		300	IN SOA	ns.example.test. hostmaster.example.test. (
+					1          ; serial
+					3600       ; refresh (1 hour)
+					900        ; retry (15 minutes)
+					1209600    ; expire (2 weeks)
+					30         ; minimum (30 seconds)
+					)
+			300	RRSIG	SOA 13 2 300 (
+					20261028010244 20261027000244 53747 example.test.
+					JiCsBL/PjafTi326D79d0CLA/sYuQMIcfeU7
+					pLBdeS+xk2bkHf6I+5fLR/4/WCrmzwsum0AE
+					qpGxEx10lv3jWQ== )
+			300	NS	ns.example.test.
+			300	RRSIG	NS 13 2 300 (
+					20261028010244 20261027000244 53747 example.test.
+					m8dPulcfaQgXX1dsdFwCJlrl3H5CmwI2uP4l
+					3STRefthqjr12hlaL/AHsXlt48vtAZDwIJE4
+					yXDfT1KY3/9Y5Q== )
+			300	A	192.0.2.1
+			300	RRSIG	A 13 2 300 (
+					20261028010244 20261027000244 53747 example.test.
+					3h/wXNxfwxajiGFUT34w05Ss07JQDoBkndCa
+					7+rEU9cdYHtAWpYOir8hWpVMLn/335t6puXq
+					t/k4g/xE6daEqQ== )
+			300	MX	10 mail.example.test.
+			300	RRSIG	MX 13 2 300 (
+					20261028010244 20261027000244 53747 example.test.
+					kAcxdNvhwZDhxIRs3TLv137l+Vck2f6/yHCl
+					lXu0O5guuHjXQANKQYGIq6tZLQ5y63Ce7k9P
+					JShk9TRxtJ1dYA== )
+			30	NSEC	_sip._tcp.example.test. A NS SOA MX RRSIG NSEC DNSKEY CAA
+			30	RRSIG	NSEC 13 2 30 (
+					20261028010244 20261027000244 53747 example.test.
+					9kPSIV7xG7wqGdocx7vJMbGzVbpYpzTqKevz
+					Mk+QqokuUbySV1gdV9s3I/06Wivk9zMGMGEs
+					ZT9dRhdjuGdFrg== )
+			300	DNSKEY	256 3 13 (
+					j+99jTMendRY4HsScEAl2vl+FUqjvgphu7bM
+					B3bNJWu2AZwe27NiRR5WxoB1Gw3/N2VZfH3M
+					qbJb5f7+iIMQtg==
+					) ; ZSK; alg = ECDSAP256SHA256 ; key id = 53747
+			300	DNSKEY	257 3 13 (
+					SW6tIwXrc8Ck9TJTf5AklnJNfhVV7AxJkwrR
+					vCWSnEo6belr83Uzb2pzp4oHy0XTCgKWykV7
+					RAz0mYNs+LnlLA==
+					) ; KSK; alg = ECDSAP256SHA256 ; key id = 37779
+			300	RRSIG	DNSKEY 13 2 300 (
+					20261028010244 20261027000244 37779 example.test.
+					I/yWQGwPz1jNVPbuO0BffK0lgGFuCbXCCyr4
+					WEXFvRKcSr7+X3t1rns24x+EgJUl18l7tq/U
+					VKeB43FXcJ2gEw== )
+			300	RRSIG	DNSKEY 13 2 300 (
+					20261028010244 20261027000244 53747 example.test.
+					7WBrgMCz3Bx3RxFS52RKu6pcuWapfFO37ZVK
+					j29ZAMm71a2A7Xirhzp7M3BtGOcFCCKzcYaq
+					MYbOvp3bbeIgBg== )
+			300	CAA	0 issue "ca.example.test"
+			300	RRSIG	CAA 13 2 300 (
+					20261028010244 20261027000244 53747 example.test.
+					OxjIh+aIW8OK0k3qHTn6Vn+nuV3Q5cq+B6Ew
+					m4Ffr2rgRtMbk2jvBz438jbz0KidWUqdM/wC
+					KgAGo9dE91NpaQ== )
+_sip._tcp.example.test.	300	IN SRV	0 5 5060 www.example.test.
+			300	RRSIG	SRV 13 4 300 (
+					20261028010244 20261027000244 53747 example.test.
+					TRQflkdefYWxLlMSgI3FEidbj8cWBOWRKE3r
+					WShZPGnCLpWpzkRhnGmffVRt2Zw+RIibFSOJ
+					wy+ngfLncX8ecw== )
+			30	NSEC	alias.example.test. SRV RRSIG NSEC
+			30	RRSIG	NSEC 13 4 30 (
+					20261028010244 20261027000244 53747 example.test.
+					PqNfN89GfqW5QUjVDe0Q3Tb2YzZN9Q4shrv1
+					ZTmHr5/3/ztB5n15OlNYP4m+MpeStm36IITl
+					YOfj2s+RBtpO5A== )
+alias.example.test.	300	IN CNAME www.example.test.
+			300	RRSIG	CNAME 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					UreOWIOcuuLdspjRlTvJk5brYlDyspXXIYqO
+					MLfL+op2XcapB8ujhsouAC9CqsRncQwEuAPU
+					0Im0JmCFDNBgVQ== )
+			30	NSEC	alias-empty.example.test. CNAME RRSIG NSEC
+			30	RRSIG	NSEC 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					CMicuoLfMj79aXgqQhtmE83CKiuRf7+3JgyV
+					T0w/v5rwLog//VtDwdy6BtLInhCCXw0djij6
+					WUG+yZvJagmUSg== )
+alias-empty.example.test. 300	IN CNAME empty.example.test.
+			300	RRSIG	CNAME 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					KOkJkUHwjBrHRdnBZJgilwPDvh/Iz5+mkEVe
+					Ux4ws/zBCymKtimVRLjzzM7pJJozJ9rBGc+k
+					NIppLf2Vr5sJ8w== )
+			30	NSEC	child.example.test. CNAME RRSIG NSEC
+			30	RRSIG	NSEC 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					UmfUHwQEQqG7CicMMiIbPToxtMEqpEteILhu
+					JcWAq7gLEUMiBH5whANe8Hngxq9QDiFaORcT
+					WIRPBBHqKegG9g== )
+child.example.test.	300	IN NS	ns.child.example.test.
+			30	NSEC	delegated-alias.example.test. NS RRSIG NSEC
+			30	RRSIG	NSEC 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					7RtFxl1DRiiH/k8pyAxuEJGfl3wvNyyG9o/x
+					xnhUHSXJoeNXw7C+nCL+aps+xh38Q5hrHd3k
+					YL1q1/wVw94LOw== )
+ns.child.example.test.	300	IN A	192.0.2.53
+delegated-alias.example.test. 300 IN CNAME www.child.example.test.
+			300	RRSIG	CNAME 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					p4aNOdwNiD0uhtF6bQMqxcFiZYXv5BYbjdz3
+					5dnWnae4Zv3CGbXvSL5M7I3vEsAY/j1rtjdf
+					t3Xkzeb34sEMrw== )
+			30	NSEC	leaf.deep.empty.example.test. CNAME RRSIG NSEC
+			30	RRSIG	NSEC 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					a6EvcyR5RFGVxCOtZzvQPkf1IsRd5sPf4Osx
+					Pyk3i8ve9ThLgEZnNp3d1AxpNYOCX5sBpcBr
+					wWkruVjSx6Pw6A== )
+leaf.deep.empty.example.test. 300 IN TXT "creates two empty nonterminals"
+			300	RRSIG	TXT 13 5 300 (
+					20261028010244 20261027000244 53747 example.test.
+					uFwb3adwCnIdGvdmoSUgPySkxDaqYS+0xLmP
+					AGE304zXUn1T5YIqoZbI/fI1/FQ1NNXKCKWt
+					laTWZuN3zqxLPQ== )
+			30	NSEC	external-alias.example.test. TXT RRSIG NSEC
+			30	RRSIG	NSEC 13 5 30 (
+					20261028010244 20261027000244 53747 example.test.
+					/cr9JvJ9VCCONinpaBbnnl3mvqrsKV/FZHFY
+					h7Po7CYjpwJHgzo7sY0L1/g24TA5e0hleQzc
+					S0t7VPUaW3zGAw== )
+external-alias.example.test. 300 IN CNAME www.outside.test.
+			300	RRSIG	CNAME 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					OOPT2dpl15mxkOHhdwxgAdu8Che7JSzX8WsB
+					WmVgcbUpN6HwM6s71FWTiUuxv0V15dn5Yn6+
+					vQ+GWh93GwQErg== )
+			30	NSEC	large.example.test. CNAME RRSIG NSEC
+			30	RRSIG	NSEC 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					wz0v3yDq55mWrkvFHktOnmi35vVong2df5M2
+					t6wtgWDRGakRfNUQrTFqMd+f/9J+RmZXRptH
+					5sfSbS4vmYkUMA== )
+large.example.test.	300	IN TXT	"0:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"1:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"2:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"3:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"4:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"5:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"6:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"7:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"8:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	IN TXT	"9:xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+			300	RRSIG	TXT 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					JSW3OvzqdiNYnYJXGNcuOTp2oIKnIMbK34Fq
+					B1h4SjweluCyCu2plqz7WWhQXRt/O7mlO84I
+					+9ItM9uKhZvm0A== )
+			30	NSEC	mail.example.test. TXT RRSIG NSEC
+			30	RRSIG	NSEC 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					3SP/4wgEbfgjdZz9JcbbYk5p4piLJaxbb9Nf
+					wwVsEvDF0SKkYlFbafP8P7KpwptooJ6iupGN
+					KkqYt61pfMhDzw== )
+mail.example.test.	300	IN A	192.0.2.25
+			300	RRSIG	A 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					VHdHCl5lW1yxVnTfYyv1qOF7+BjmFFdECK2j
+					BtaVYL3QOZmzx3pHPDAbUR+vLjg2b0jp0Cis
+					Bi67r4uxCNVqJw== )
+			30	NSEC	many.example.test. A RRSIG NSEC
+			30	RRSIG	NSEC 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					ylOWKIxrpNbPGeYC1peglb4kMH8YMCWLO0zm
+					ynCW2fJrWCYBGyF+b4ZIim33MsHxrki27Ndv
+					hft33fZHbXRmrg== )
+many.example.test.	300	IN A	192.0.2.1
+			300	IN A	192.0.2.2
+			300	IN A	192.0.2.3
+			300	IN A	192.0.2.4
+			300	IN A	192.0.2.5
+			300	IN A	192.0.2.6
+			300	IN A	192.0.2.7
+			300	IN A	192.0.2.8
+			300	IN A	192.0.2.9
+			300	IN A	192.0.2.10
+			300	IN A	192.0.2.11
+			300	IN A	192.0.2.12
+			300	IN A	192.0.2.13
+			300	IN A	192.0.2.14
+			300	IN A	192.0.2.15
+			300	IN A	192.0.2.16
+			300	IN A	192.0.2.17
+			300	IN A	192.0.2.18
+			300	IN A	192.0.2.19
+			300	IN A	192.0.2.20
+			300	IN A	192.0.2.21
+			300	IN A	192.0.2.22
+			300	IN A	192.0.2.23
+			300	IN A	192.0.2.24
+			300	IN A	192.0.2.25
+			300	IN A	192.0.2.26
+			300	IN A	192.0.2.27
+			300	IN A	192.0.2.28
+			300	IN A	192.0.2.29
+			300	IN A	192.0.2.30
+			300	IN A	192.0.2.31
+			300	IN A	192.0.2.32
+			300	IN A	192.0.2.33
+			300	IN A	192.0.2.34
+			300	IN A	192.0.2.35
+			300	IN A	192.0.2.36
+			300	IN A	192.0.2.37
+			300	IN A	192.0.2.38
+			300	IN A	192.0.2.39
+			300	IN A	192.0.2.40
+			300	IN A	192.0.2.41
+			300	IN A	192.0.2.42
+			300	IN A	192.0.2.43
+			300	IN A	192.0.2.44
+			300	IN A	192.0.2.45
+			300	IN A	192.0.2.46
+			300	IN A	192.0.2.47
+			300	IN A	192.0.2.48
+			300	IN A	192.0.2.49
+			300	IN A	192.0.2.50
+			300	IN A	192.0.2.51
+			300	IN A	192.0.2.52
+			300	IN A	192.0.2.53
+			300	IN A	192.0.2.54
+			300	IN A	192.0.2.55
+			300	IN A	192.0.2.56
+			300	IN A	192.0.2.57
+			300	IN A	192.0.2.58
+			300	IN A	192.0.2.59
+			300	IN A	192.0.2.60
+			300	IN A	192.0.2.61
+			300	IN A	192.0.2.62
+			300	IN A	192.0.2.63
+			300	IN A	192.0.2.64
+			300	IN A	192.0.2.65
+			300	IN A	192.0.2.66
+			300	IN A	192.0.2.67
+			300	IN A	192.0.2.68
+			300	IN A	192.0.2.69
+			300	IN A	192.0.2.70
+			300	IN A	192.0.2.71
+			300	IN A	192.0.2.72
+			300	IN A	192.0.2.73
+			300	IN A	192.0.2.74
+			300	IN A	192.0.2.75
+			300	IN A	192.0.2.76
+			300	IN A	192.0.2.77
+			300	IN A	192.0.2.78
+			300	IN A	192.0.2.79
+			300	IN A	192.0.2.80
+			300	IN A	192.0.2.81
+			300	IN A	192.0.2.82
+			300	IN A	192.0.2.83
+			300	IN A	192.0.2.84
+			300	IN A	192.0.2.85
+			300	IN A	192.0.2.86
+			300	IN A	192.0.2.87
+			300	IN A	192.0.2.88
+			300	IN A	192.0.2.89
+			300	IN A	192.0.2.90
+			300	IN A	192.0.2.91
+			300	IN A	192.0.2.92
+			300	IN A	192.0.2.93
+			300	IN A	192.0.2.94
+			300	IN A	192.0.2.95
+			300	IN A	192.0.2.96
+			300	RRSIG	A 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					cD/+kfM4h6EmqFa4MsZvuIPgx2TzSY8Orp9H
+					+iAkEHnHX8lcdADUpaCcjABj1uzCBjDS0xmu
+					U37Fvfr+1J8fAQ== )
+			30	NSEC	ns.example.test. A RRSIG NSEC
+			30	RRSIG	NSEC 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					M9dy/Bb7sjHbRN/UV0GYZkyb2+mK82mm01Ld
+					YRmFV0hr1nJ2yDfm3gVf8L1ryAVoKgz27zFe
+					RBe1/fZbbnoEGw== )
+ns.example.test.	300	IN A	172.29.53.20
+			300	RRSIG	A 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					HgDXXqg1b6OeoPbNzFRMJtxapm9j+EL+Cmhz
+					PssgUMxGPeHvQtDbkpnuhwKmfC4IoqFHCTMK
+					c48HALF9uuHRTQ== )
+			30	NSEC	text.example.test. A RRSIG NSEC
+			30	RRSIG	NSEC 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					ixuJ8qyo0A8eyTmCwwT6MI+Yvmzfk0RDo+tc
+					nc42WvNssDJBB3CqtdsD69rdr2l+hv/pxOba
+					XGNl+Pm13fnilQ== )
+text.example.test.	300	IN TXT	"hello from an independent DNS client"
+			300	RRSIG	TXT 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					QxTGNRgm7Xf5K4IpfvkHWDMcRymuqzCD9Hh9
+					sNmHlXRDCN9CRQPTLSzs/i/jMn3Gq4UHVMA/
+					A0Bb+0HntOxcLw== )
+			30	NSEC	*.wild.example.test. TXT RRSIG NSEC
+			30	RRSIG	NSEC 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					dFHeG+feBgQg97057LZ8aYzCV1qeG7xbl/Ki
+					JHJWuZAq3UyoRbE5ZOq1mQzmxZzylLDncKJ9
+					1aAGvNurMa1AgQ== )
+*.wild.example.test.	300	IN TXT	"wildcard"
+			300	RRSIG	TXT 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					LAwrGPBUmQC+wyvx870xcQwacOLhTH1xB+xa
+					Gf31wMe7oDEHNcXAVvXYb/bw/2DR15MEZMYL
+					RK09OU5nEZR6Ow== )
+			30	NSEC	a.wild.example.test. TXT RRSIG NSEC
+			30	RRSIG	NSEC 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					rvAvLor/5J1M/oMvxQyjvlLp9v8KscKqXtSC
+					RxRf3wMdFh2imaD4Bga4NOrG55nIw03CGGlU
+					kxXMiPA7wWFydQ== )
+a.wild.example.test.	300	IN TXT	"lower boundary"
+			300	RRSIG	TXT 13 4 300 (
+					20261028010244 20261027000244 53747 example.test.
+					RTSjaaZKT/n80SC6TplX0Q6PLh9Zl8TA5Yq7
+					mQgcztFaEw6C/a8RzoJ/WckN1JroW4HdZsUe
+					V22VowBU0DaHSA== )
+			30	NSEC	z.wild.example.test. TXT RRSIG NSEC
+			30	RRSIG	NSEC 13 4 30 (
+					20261028010244 20261027000244 53747 example.test.
+					nGPWxHILUticgzPO+s+FwUY6HNOsFuWTgaZV
+					ttOs5rgm504p3CpWrTCGA6VT3KCK7CB2NbhS
+					Q1xeFuiNU2I90Q== )
+z.wild.example.test.	300	IN TXT	"upper boundary"
+			300	RRSIG	TXT 13 4 300 (
+					20261028010244 20261027000244 53747 example.test.
+					cqj/reRLL/JzoLOLUECJohBwanwsQBHt6iHO
+					8kP1+OMSUwVBMzH/tT+diTTH3xZT4oTOykum
+					LnqiqT6oMalxsg== )
+			30	NSEC	www.example.test. TXT RRSIG NSEC
+			30	RRSIG	NSEC 13 4 30 (
+					20261028010244 20261027000244 53747 example.test.
+					oxX0nhbQQ1RZRCVlgFsuHOR5LGQEUF3aqrNv
+					Rv4P1T7WoigFCKLoYkg3oG0+YzzCCblVPJ1F
+					S2Mz0mHJPxUGoQ== )
+www.example.test.	300	IN A	192.0.2.80
+			300	RRSIG	A 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					Fi9aVMswtQco3IkqaSI8F3rKFYm1TYsKj6fh
+					AXcrPjd0A/o372khhTxCk219Gek6RDvEElLE
+					awE/0eflG2A1lw== )
+			300	AAAA	2001:db8::80
+			300	RRSIG	AAAA 13 3 300 (
+					20261028010244 20261027000244 53747 example.test.
+					nfa5TT3hWIBxlxILIxtriB2VAim0PKFIT4X7
+					5sdF8cI2lhSpjYW2F2r9xi26Nc6ovJURPMsy
+					fClEbQ0FLvgCQA== )
+			30	NSEC	example.test. A AAAA RRSIG NSEC
+			30	RRSIG	NSEC 13 3 30 (
+					20261028010244 20261027000244 53747 example.test.
+					Xg1cOTNDo7ZD5NWA4UQ/V9mjKLwGkY882FXn
+					/3JEa0hfflvy3nRF4kjwKpndjNQingLk88Tq
+					7HG+EN5VQvhK1g== )

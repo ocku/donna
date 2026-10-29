@@ -1,0 +1,19 @@
+[package]
+name = "donna-example-memory-adapters"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+autobins = false
+
+[dependencies]
+dns.workspace = true
+nameserver.workspace = true
+resolver.workspace = true
+tokio.workspace = true
+transport = { workspace = true, features = [] }
+
+[[bin]]
+name = "external_backends"
+path = "src/main.rs"

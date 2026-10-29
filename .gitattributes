@@ -1,0 +1,4 @@
+# CSV evidence uses the standard csv.writer CRLF terminator; preserve its bytes.
+examples/interop/results/*.csv whitespace=cr-at-eol
+# An empty final answer field still requires its TSV delimiter.
+tests/behaviour/authority.tsv whitespace=-blank-at-eol

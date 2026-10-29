@@ -1,0 +1,11 @@
+$ORIGIN example.test.
+$TTL 300
+@ IN SOA ns.example.test. hostmaster.example.test. 1 3600 900 1209600 30
+@ IN NS ns.example.test.
+ns IN A 192.0.2.53
+local 120 IN DNAME destination.example.test.
+local 300 IN TXT "owner data"
+www.destination 300 IN A 192.0.2.80
+deep.www.destination 300 IN A 192.0.2.81
+external 120 IN DNAME elsewhere.invalid.
+alias 300 IN CNAME www.local.example.test.

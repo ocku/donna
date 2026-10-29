@@ -1,0 +1,28 @@
+[package]
+name = "donna-example-clients"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+autobins = false
+
+[dependencies]
+dns.workspace = true
+tokio.workspace = true
+transport = { workspace = true, features = ["udp", "tcp"] }
+
+rustls = { workspace = true, optional = true }
+ed25519-dalek = { workspace = true, optional = true }
+
+[features]
+encrypted = ["dep:rustls", "dep:ed25519-dalek", "transport/tls", "transport/doh", "transport/doq", "transport/dnscrypt"]
+
+[[bin]]
+name = "client"
+path = "src/main.rs"
+required-features = ["encrypted"]
+
+[[bin]]
+name = "query"
+path = "src/query.rs"

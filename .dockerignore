@@ -1,0 +1,6 @@
+target
+**/target
+.git
+**/__pycache__
+**/.venv
+**/.artifacts

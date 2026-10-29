@@ -1,0 +1,5 @@
+dnspython[doh,doq]==2.8.0
+PyNaCl==1.6.0
+aioquic==1.7.0
+h2==4.4.1
+httpx==0.28.1

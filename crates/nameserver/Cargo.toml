@@ -1,0 +1,19 @@
+[package]
+name = "nameserver"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+authors = ["ocku"]
+publish = false
+
+[dependencies]
+dns = { path = "../dns" }
+smallvec = "1.15"
+tokio = { version = "1.53.1", features = ["rt", "sync", "time"] }
+tracing = "0.1.44"
+transport = { path = "../transport" }
+
+[dev-dependencies]
+ring = "0.17.14"
+tokio = { version = "1.53.1", features = ["macros", "net", "rt", "time"] }
+transport = { path = "../transport", features = ["udp"] }

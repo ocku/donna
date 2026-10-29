@@ -1,0 +1,29 @@
+[package]
+name = "donna-example-authority"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+autobins = false
+
+[dependencies]
+dns.workspace = true
+nameserver.workspace = true
+tokio.workspace = true
+transport = { workspace = true, features = ["udp", "tcp"] }
+
+rustls = { workspace = true, optional = true }
+crypto_box = { version = "0.9.1", default-features = false, features = ["chacha20", "std"], optional = true }
+
+[features]
+encrypted = ["dep:rustls", "dep:crypto_box", "transport/tls", "transport/doh", "transport/doq", "transport/dnscrypt"]
+
+[[bin]]
+name = "listeners"
+path = "src/listeners.rs"
+required-features = ["encrypted"]
+
+[[bin]]
+name = "authority"
+path = "src/main.rs"

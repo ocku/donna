@@ -1,0 +1,18 @@
+[package]
+name = "dns"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+authors = ["ocku"]
+publish = false
+
+[dependencies]
+ring = "0.17.14"
+p256 = { version = "0.13.2", features = ["ecdsa", "pkcs8"] }
+rsa = { version = "0.9.9", features = ["sha1", "sha2"] }
+sha1 = { version = "0.10.6", features = ["oid"] }
+hmac = "0.12.1"
+sha2 = { version = "0.11.1", default-features = false }
+tracing = "0.1.44"
+unicode-normalization = "0.1.25"
+smallvec = "1.15"

@@ -1,0 +1,59 @@
+# Donna daemon configuration. Relative files resolve from this file's directory.
+# Roles: recursive (iterate from roots), forward (use upstreams), authoritative.
+# Local [[zones]] can also be served in recursive and forward modes.
+role = "recursive"
+max_inflight = 1024
+request_timeout_secs = 30
+log_queries = false
+
+[[listen]]
+protocol = "udp"
+address = "127.0.0.1:53"
+
+[[listen]]
+protocol = "tcp"
+address = "127.0.0.1:53"
+
+[access]
+# Applies only to recursion/forwarding; authoritative zones are public.
+recursion = ["127.0.0.0/8", "::1/128"]
+
+[resolver]
+# Validation uses the bundled KSK-2017 and KSK-2024 root DNSKEYs.
+validate = true
+# trust_anchors = "root.keys" # Explicit replacement DNSKEY master file
+# root_servers = ["198.41.0.4:53"] # Empty/omitted uses built-in root hints
+cache_capacity = 4096 # Zero disables caching
+max_ttl_secs = 604800
+max_negative_ttl_secs = 10800
+timeout_secs = 5
+max_steps = 32
+max_attempts_per_server = 2
+max_concurrent_queries = 1
+edns_udp_payload_size = 1232
+max_bad_ttl_secs = 30
+failure_ttl_secs = 1
+max_nsec3_iterations = 150
+
+[authority]
+# Transfers are denied by default; list authorized networks explicitly.
+allow_transfer = []
+
+# [[zones]]
+# origin = "example.test."
+# file = "example.test.zone"
+
+# Encrypted listener example (also supports https and quic):
+# [[listen]]
+# protocol = "tls"
+# address = "127.0.0.1:853"
+# certificate = "server-chain.pem"
+# private_key = "server-key.pem"
+# https_path = "/dns-query" # Used only by https
+
+# Forwarding example (requires role = "forward"):
+# [[upstream]]
+# address = "1.1.1.1:853"
+# protocol = "tls"
+# tls_name = "cloudflare-dns.com"
+# ca = "private-ca.pem" # Optional extra PEM roots

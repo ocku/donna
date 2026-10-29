@@ -1,0 +1,70 @@
+name: donna-interop
+x-donna: &donna
+  image: donna-interop-donna
+  build:
+    context: ../..
+    dockerfile: examples/interop/docker/Donna.Dockerfile
+  volumes: [certificates:/certs:ro]
+  depends_on:
+    certificates: {condition: service_completed_successfully}
+x-peers: &peers
+  image: donna-interop-peers
+  build:
+    context: ../..
+    dockerfile: examples/interop/docker/Peers.Dockerfile
+  volumes: [certificates:/certs:ro]
+x-bind: &bind
+  image: donna-interop-bind
+  build:
+    context: ../..
+    dockerfile: examples/interop/docker/Bind.Dockerfile
+services:
+  certificates:
+    <<: *peers
+    volumes: [certificates:/certs]
+    command: [python, certificates.py]
+    networks: [laboratory]
+  donna:
+    <<: *donna
+    environment: {LISTEN_HOST: "172.29.53.10"}
+    networks:
+      laboratory: {ipv4_address: 172.29.53.10}
+  recursive:
+    <<: *donna
+    command: [donna, serve, -c, /suite/fixtures/basic/recursive.toml]
+    networks:
+      laboratory: {ipv4_address: 172.29.53.11}
+  bind:
+    <<: *bind
+    networks:
+      laboratory: {ipv4_address: 172.29.53.20}
+  tld:
+    <<: *bind
+    command: [named, -g, -c, /suite/fixtures/hierarchy/tld.conf, -u, root]
+    networks:
+      laboratory: {ipv4_address: 172.29.53.21}
+  root:
+    <<: *bind
+    command: [named, -g, -c, /suite/fixtures/hierarchy/root.conf, -u, root]
+    networks:
+      laboratory: {ipv4_address: 172.29.53.22}
+  peers:
+    <<: *peers
+    depends_on:
+      certificates: {condition: service_completed_successfully}
+      bind: {condition: service_started}
+    networks:
+      laboratory: {ipv4_address: 172.29.53.30}
+  probe:
+    <<: *peers
+    command: [python, probe.py]
+    depends_on:
+      donna: {condition: service_started}
+    networks: [laboratory]
+    profiles: [test]
+volumes:
+  certificates:
+networks:
+  laboratory:
+    ipam:
+      config: [{subnet: 172.29.53.0/24}]

@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  CARGO_INCREMENTAL: "0"
+  CARGO_PROFILE_DEV_DEBUG: "0"
+  CARGO_PROFILE_TEST_DEBUG: "0"
+  CARGO_TERM_COLOR: always
+
+jobs:
+  workspace:
+    name: Workspace (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install stable Rust and lint tools
+        run: rustup toolchain install stable --profile minimal --component rustfmt --component clippy
+      - name: Check formatting
+        run: cargo +stable fmt --all -- --check
+      - name: Lint all workspace targets
+        run: cargo +stable clippy --locked --workspace --all-targets --all-features -- -D warnings
+      - name: Test all workspace targets
+        run: cargo +stable test --locked --workspace --all-targets --all-features
+      - name: Test documentation
+        run: cargo +stable test --locked --workspace --doc --all-features
+      - name: Build API documentation
+        run: cargo +stable doc --locked --workspace --all-features --no-deps
+
+  examples:
+    name: Independent workspaces and Python checks
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      CARGO_TARGET_DIR: ${{ github.workspace }}/target
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install stable Rust and lint tools
+        run: rustup toolchain install stable --profile minimal --component clippy
+      - name: Check small applications
+        run: cargo +stable check --locked --manifest-path examples/Cargo.toml --workspace --all-targets
+      - name: Lint interoperability applications
+        run: cargo +stable clippy --locked --manifest-path examples/interop/Cargo.toml --all-targets -- -D warnings
+      - name: Check remote adapters
+        run: cargo +stable check --locked --manifest-path examples/adapters/remote/Cargo.toml --all-targets
+      - name: Test send portability harness
+        run: cargo +stable test --locked --manifest-path examples/interop/portability/Cargo.toml
+      - name: Test behavior probes
+        run: python3 -m unittest discover -s tests/behaviour
+      - name: Test host interoperability harness
+        env:
+          PYTHONPATH: examples/interop
+        run: python3 -m unittest discover -s examples/interop/tests -p 'test_*.py'
+
+  containers:
+    name: Container packaging
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build client image
+        run: docker build -f packaging/docker/Dockerfile.client -t donna-client:local .
+      - name: Build server image
+        run: docker build -f packaging/docker/Dockerfile.server -t donna-recursive:local .
+      - name: Exercise container roles and lifecycle
+        run: python3 packaging/docker/smoke.py

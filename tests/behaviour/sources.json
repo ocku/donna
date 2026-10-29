@@ -1,0 +1,61 @@
+{
+  "method": "Independently written cases informed by upstream tests; no upstream code or fixture copied. RFCs govern normative behavior; BIND-compatible ANY policy is identified separately.",
+  "sources": [
+    {
+      "project": "ISC BIND 9",
+      "revision": "917c4f7ee9f2c2f25350a6a5bb6be3b207588a51",
+      "path": "bin/tests/system/auth/tests.sh",
+      "url": "https://github.com/isc-projects/bind9/blob/917c4f7ee9f2c2f25350a6a5bb6be3b207588a51/bin/tests/system/auth/tests.sh",
+      "sha256": "c48649d593c13bdbacd65569552efdbb6bb0a4c31bfc1154c00bb4cb8db97a68",
+      "status": "implemented"
+    },
+    {
+      "project": "ISC BIND 9",
+      "revision": "917c4f7ee9f2c2f25350a6a5bb6be3b207588a51",
+      "path": "bin/tests/system/cname_recursion/tests_cname_recursion.py",
+      "url": "https://github.com/isc-projects/bind9/blob/917c4f7ee9f2c2f25350a6a5bb6be3b207588a51/bin/tests/system/cname_recursion/tests_cname_recursion.py",
+      "sha256": "a63ae001b7d7cfb48f8e6119abc06db3acb9f391dc66465307c6d737dc74fe66",
+      "status": "candidate"
+    },
+    {
+      "project": "ISC BIND 9",
+      "revision": "917c4f7ee9f2c2f25350a6a5bb6be3b207588a51",
+      "path": "bin/tests/system/formerr/tests_formerr.py",
+      "url": "https://github.com/isc-projects/bind9/blob/917c4f7ee9f2c2f25350a6a5bb6be3b207588a51/bin/tests/system/formerr/tests_formerr.py",
+      "sha256": "858793967220aa0d302232a3203d49b159c8029fed37b666fabfb9052c90ed7f",
+      "status": "candidate"
+    },
+    {
+      "project": "ISC BIND 9",
+      "revision": "917c4f7ee9f2c2f25350a6a5bb6be3b207588a51",
+      "path": "bin/tests/system/masterfile/tests_masterfile.py",
+      "url": "https://github.com/isc-projects/bind9/blob/917c4f7ee9f2c2f25350a6a5bb6be3b207588a51/bin/tests/system/masterfile/tests_masterfile.py",
+      "sha256": "26be9bda92ea0a53e18e77d5044bc64777246dfc952f6899c652f7d450b69d4a",
+      "status": "candidate"
+    },
+    {
+      "project": "NLnet Labs Unbound",
+      "revision": "e78d0a1c03e40602e81d0c440190134106cf6ffc",
+      "path": "testdata/iter_dname_ttl0.rpl",
+      "url": "https://github.com/NLnetLabs/unbound/blob/e78d0a1c03e40602e81d0c440190134106cf6ffc/testdata/iter_dname_ttl0.rpl",
+      "sha256": "2cdadc8293cd706c6050757e2d46359bb5d4cf477d8064e43c0e0f4f7a7c9e91",
+      "status": "candidate"
+    },
+    {
+      "project": "NLnet Labs Unbound",
+      "revision": "e78d0a1c03e40602e81d0c440190134106cf6ffc",
+      "path": "testdata/iter_scrub_dname_out_of_zone.rpl",
+      "url": "https://github.com/NLnetLabs/unbound/blob/e78d0a1c03e40602e81d0c440190134106cf6ffc/testdata/iter_scrub_dname_out_of_zone.rpl",
+      "sha256": "d902962fd1279ea9f13fc1acaf59e3b286d0cd6aa2498c97fe3add93e0c57a7b",
+      "status": "candidate"
+    },
+    {
+      "project": "NLnet Labs Unbound",
+      "revision": "e78d0a1c03e40602e81d0c440190134106cf6ffc",
+      "path": "testdata/val_cnametonodata.rpl",
+      "url": "https://github.com/NLnetLabs/unbound/blob/e78d0a1c03e40602e81d0c440190134106cf6ffc/testdata/val_cnametonodata.rpl",
+      "sha256": "51723a973404536b09dc9ec6a2aaf597aa28aa066252ac1411fc856b70aa9d9c",
+      "status": "candidate"
+    }
+  ]
+}

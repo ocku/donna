@@ -1,0 +1,3 @@
+# Install as /etc/conf.d/donna.
+config="/etc/donna/donna.toml"
+RUST_LOG="info"

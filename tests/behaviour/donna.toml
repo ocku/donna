@@ -1,0 +1,13 @@
+role = "authoritative"
+
+[[listen]]
+protocol = "udp"
+address = "127.0.0.1:5300"
+
+[[listen]]
+protocol = "tcp"
+address = "127.0.0.1:5300"
+
+[[zones]]
+origin = "example.test."
+file = "authority.zone"

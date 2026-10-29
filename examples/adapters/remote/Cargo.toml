@@ -1,0 +1,23 @@
+[package]
+name = "donna-remote-adapters-example"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+authors = ["ocku"]
+publish = false
+autobins = false
+
+[[bin]]
+name = "cache-engine"
+path = "src/main.rs"
+
+[workspace]
+
+[dependencies]
+dns = { path = "../../../crates/dns" }
+nameserver = { path = "../../../crates/nameserver" }
+resolver = { path = "../../../crates/resolver" }
+transport = { path = "../../../crates/transport" }
+tokio = { version = "1.53.1", features = ["macros", "rt-multi-thread", "time"] }
+redis = { version = "0.32.7", default-features = false, features = ["tokio-comp"] }
+tokio-postgres = "0.7.18"

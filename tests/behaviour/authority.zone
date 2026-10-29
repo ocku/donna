@@ -1,0 +1,18 @@
+$ORIGIN example.test.
+$TTL 300
+@ IN SOA ns.example.test. hostmaster.example.test. 1 3600 900 1209600 30
+@ IN NS ns.example.test.
+ns IN A 192.0.2.53
+target IN A 192.0.2.80
+alias IN CNAME target.example.test.
+chain IN CNAME alias.example.test.
+external IN CNAME outside.invalid.
+missing-alias IN CNAME absent.example.test.
+empty-alias IN CNAME branch.example.test.
+leaf.branch IN TXT "empty nonterminal"
+old IN DNAME new.example.test.
+old IN A 192.0.2.81
+leaf.new IN A 192.0.2.82
+alias.new IN CNAME target.example.test.
+cut IN NS ns.cut.example.test.
+ns.cut IN A 192.0.2.54

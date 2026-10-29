@@ -1,0 +1,22 @@
+[package]
+name = "donna-example-recursive"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+autobins = false
+
+[dependencies]
+dns.workspace = true
+resolver.workspace = true
+tokio.workspace = true
+transport = { workspace = true, features = ["udp", "tcp"] }
+
+[[bin]]
+name = "recursive"
+path = "src/main.rs"
+
+[[bin]]
+name = "iterative_client"
+path = "src/bin/iterative_client.rs"

@@ -1,0 +1,17 @@
+# id	qname	qtype	rcode	kind	answer records separated by semicolons
+cname-in-zone	alias.example.test.	A	NOERROR	answer	alias.example.test. 300 IN CNAME target.example.test.; target.example.test. 300 IN A 192.0.2.80
+cname-in-zone-nodata	alias.example.test.	AAAA	NOERROR	negative	alias.example.test. 300 IN CNAME target.example.test.
+cname-chain	chain.example.test.	A	NOERROR	answer	chain.example.test. 300 IN CNAME alias.example.test.; alias.example.test. 300 IN CNAME target.example.test.; target.example.test. 300 IN A 192.0.2.80
+cname-query-stops	alias.example.test.	CNAME	NOERROR	answer	alias.example.test. 300 IN CNAME target.example.test.
+cname-any-stops	alias.example.test.	ANY	NOERROR	answer	alias.example.test. 300 IN CNAME target.example.test.
+cname-outside-authority	external.example.test.	A	NOERROR	answer	external.example.test. 300 IN CNAME outside.invalid.
+cname-terminal-nxdomain	missing-alias.example.test.	A	NXDOMAIN	negative	missing-alias.example.test. 300 IN CNAME absent.example.test.
+cname-terminal-empty-node	empty-alias.example.test.	A	NOERROR	negative	empty-alias.example.test. 300 IN CNAME branch.example.test.
+dname-owner-is-not-redirected	old.example.test.	A	NOERROR	answer	old.example.test. 300 IN A 192.0.2.81
+dname-owner-query	old.example.test.	DNAME	NOERROR	answer	old.example.test. 300 IN DNAME new.example.test.
+dname-descendant	leaf.old.example.test.	A	NOERROR	answer	old.example.test. 300 IN DNAME new.example.test.; leaf.old.example.test. 300 IN CNAME leaf.new.example.test.; leaf.new.example.test. 300 IN A 192.0.2.82
+dname-to-cname-chain	alias.old.example.test.	A	NOERROR	answer	old.example.test. 300 IN DNAME new.example.test.; alias.old.example.test. 300 IN CNAME alias.new.example.test.; alias.new.example.test. 300 IN CNAME target.example.test.; target.example.test. 300 IN A 192.0.2.80
+dname-cname-query-stops	alias.old.example.test.	CNAME	NOERROR	answer	old.example.test. 300 IN DNAME new.example.test.; alias.old.example.test. 300 IN CNAME alias.new.example.test.
+dname-any-query-stops	alias.old.example.test.	ANY	NOERROR	answer	old.example.test. 300 IN DNAME new.example.test.; alias.old.example.test. 300 IN CNAME alias.new.example.test.
+dname-terminal-nxdomain	absent.old.example.test.	A	NXDOMAIN	negative	old.example.test. 300 IN DNAME new.example.test.; absent.old.example.test. 300 IN CNAME absent.new.example.test.
+delegation-any	host.cut.example.test.	ANY	NOERROR	referral	

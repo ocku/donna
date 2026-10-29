@@ -1,0 +1,65 @@
+[package]
+name = "transport"
+version = "0.1.0"
+edition = "2024"
+license = "Apache-2.0"
+authors = ["ocku"]
+publish = false
+readme = "README.md"
+description = "DNS over UDP, TCP, TLS, HTTPS, QUIC, and DNSCrypt"
+
+[features]
+default = []
+tcp = []
+# A conforming DNS-over-UDP client must be able to retry over TCP when a
+# message does not fit or a response is truncated.
+udp = ["tcp", "dep:socket2", "dep:nix"]
+# DNS over TLS uses DNS-over-TCP framing inside a TLS 1.3 session.
+tls = ["tcp", "dep:rustls", "dep:tokio-rustls"]
+# DNS over HTTPS uses HTTP/2 over authenticated TLS 1.3. It intentionally does
+# not depend on the DNS-over-TCP feature: application/dns-message omits the
+# two-octet stream length prefix.
+doh = [
+    "dep:base64ct",
+    "dep:bytes",
+    "dep:h2",
+    "dep:http",
+    "dep:rustls",
+    "dep:tokio-rustls",
+    "tokio/macros",
+]
+# DNS over QUIC reuses the validated DNS-over-TCP message and AXFR framing
+# layer inside independent QUIC streams.
+doq = ["tcp", "dep:quinn", "dep:rustls", "tokio/macros"]
+# DNSCrypt v2 over TCP and size-bounded UDP with authenticated TCP fallback.
+dnscrypt = ["tcp", "dep:crypto_box", "dep:curve25519-dalek", "dep:ed25519-dalek", "dep:getrandom"]
+
+[dependencies]
+dns = { path = "../dns" }
+tokio = { version = "1.53.1", features = ["net", "io-util", "time", "rt", "sync", "tracing"] }
+tracing = "0.1.44"
+socket2 = { version = "0.6", features = ["all"], optional = true }
+base64ct = { version = "1.8.3", features = ["alloc"], optional = true }
+bytes = { version = "1", optional = true }
+crypto_box = { version = "0.9.1", default-features = false, features = ["alloc", "chacha20", "getrandom", "std"], optional = true }
+curve25519-dalek = { version = "4", default-features = false, optional = true }
+ed25519-dalek = { version = "3", optional = true }
+getrandom = { version = "0.4", optional = true }
+h2 = { version = "0.4", optional = true }
+http = { version = "1", optional = true }
+quinn = { version = "0.11", default-features = false, features = ["runtime-tokio", "rustls-ring"], optional = true }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std"], optional = true }
+tokio-rustls = { version = "0.26", default-features = false, features = ["logging", "ring"], optional = true }
+
+[dev-dependencies]
+tokio = { version = "1.53.1", features = ["macros", "test-util", "rt-multi-thread"] }
+
+[target.'cfg(target_os = "linux")'.dependencies]
+nix = { version = "0.31.3", default-features = false, features = ["socket", "net", "uio"], optional = true }
+
+[[example]]
+name = "truncated_fallback"
+required-features = ["udp"]
+
+[target.'cfg(unix)'.dependencies]
+libc = "0.2"

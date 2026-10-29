@@ -1,0 +1,15 @@
+role = "recursive"
+
+[[listen]]
+protocol = "udp"
+address = "@LISTEN_ADDRESS@"
+
+[[listen]]
+protocol = "tcp"
+address = "@LISTEN_ADDRESS@"
+
+[access]
+recursion = [@RECURSION_CIDRS@]
+
+[resolver]
+validate = true

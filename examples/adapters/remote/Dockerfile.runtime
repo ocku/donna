@@ -1,0 +1,12 @@
+ARG BUILDER_IMAGE
+ARG RUNTIME_IMAGE=debian:bookworm-slim
+
+FROM ${BUILDER_IMAGE} AS builder
+
+FROM ${RUNTIME_IMAGE}
+
+COPY --from=builder \
+    /source/examples/adapters/remote/target/release/cache-engine \
+    /usr/local/bin/cache-engine
+
+ENTRYPOINT ["cache-engine"]
