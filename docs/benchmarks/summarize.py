@@ -30,12 +30,14 @@ for phase in ("authority", "recursive"):
         if phase == "authority"
         else ("positive", "negative", "cname")
     )
-    roles = (
+    default_roles = (
         ("donna", "bind", "knot", "hickory")
         if phase == "authority"
         else ("donna", "bind", "kresd", "hickory")
     )
-    assert len(report[phase]) == 12 * report["arguments"]["repeats"]
+    roles = report.get("roles", {}).get(phase, default_roles)
+    assert roles and len(roles) == len(set(roles))
+    assert len(report[phase]) == len(cases) * len(roles) * report["arguments"]["repeats"]
     for case in cases:
         for name in roles:
             rows = [
@@ -63,10 +65,12 @@ for phase in ("authority", "recursive"):
 if "recursive" in report["arguments"]["phases"]:
     print("\n| Resolver | Cold median ms | Min to max ms |")
     print("| --- | ---: | ---: |")
-    assert len(report["cold"]) == 4 * report["arguments"]["cold_repeats"]
-    for name in ("donna", "bind", "kresd", "hickory"):
+    roles = report.get("roles", {}).get("recursive", ("donna", "bind", "kresd", "hickory"))
+    assert len(report["cold"]) == len(roles) * report["arguments"]["cold_repeats"]
+    for name in roles:
         rows = [r for r in report["cold"] if r["server"] == name]
         assert len(rows) == report["arguments"]["cold_repeats"]
+        assert {r["repeat"] for r in rows} == set(range(len(rows)))
         values = [r["elapsed_ms"] for r in rows]
         print(
             f"| {name} | {statistics.median(values):.3f} | {min(values):.3f} to {max(values):.3f} |"

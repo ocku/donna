@@ -19,6 +19,8 @@ PREFIX = "donna-documentation-"
 NETWORK = PREFIX + "network"
 SUBNET = "172.30.93."
 CLIENT = PREFIX + "client"
+AUTHORITY_ROLES = ["donna", "bind", "knot", "hickory"]
+RECURSIVE_ROLES = ["donna", "bind", "kresd", "hickory", "unbound"]
 
 
 def run(*args):
@@ -29,6 +31,11 @@ def run(*args):
 
 def identity(image):
     return json.loads(run("image", "inspect", image))[0]["Id"]
+
+
+def container_limits(name):
+    settings = json.loads(run("inspect", "--format", "{{json .HostConfig}}", name))
+    return {"nano_cpus": settings["NanoCpus"], "memory_bytes": settings["Memory"]}
 
 
 def wait(address):
@@ -73,6 +80,9 @@ def main():
     p.add_argument("--seconds", type=int, default=3)
     p.add_argument("--repeats", type=int, default=3)
     p.add_argument("--cold-repeats", type=int, default=5)
+    p.add_argument("--cpus", type=int, default=4, help="CPU quota per container")
+    p.add_argument("--memory", default="4g", help="Docker memory limit per container")
+    p.add_argument("--workers", type=int, default=4, help="Workers per server")
     p.add_argument(
         "--phases",
         nargs="+",
@@ -85,14 +95,16 @@ def main():
         default=ROOT / "examples/interop/.artifacts/documentation.json",
     )
     args = p.parse_args()
-    if min(args.seconds, args.repeats, args.cold_repeats) < 1:
-        p.error("durations and repeat counts must be positive")
+    if min(args.seconds, args.repeats, args.cold_repeats, args.cpus, args.workers) < 1:
+        p.error("durations, repeat counts, CPU quotas and worker counts must be positive")
+    limits = ["--cpus", str(args.cpus), "--memory", args.memory]
     images = {
         "donna": args.donna_image,
         "bind": "donna-interop-bind",
         "knot": "cznic/knot:3.6",
         "hickory": "donna-interop-hickory:0.26.3",
         "kresd": "donna-interop-knot-resolver:6.5.1",
+        "unbound": "donna-interop-unbound",
         "client": args.client_image,
     }
     images = {role: identity(image) for role, image in images.items()}
@@ -118,6 +130,7 @@ def main():
             "docker/Bind.Dockerfile",
             "docker/Hickory.Dockerfile",
             "docker/KnotResolver.Dockerfile",
+            "docker/Unbound.Dockerfile",
             "docker/CacheClient.Dockerfile",
         )
     ]
@@ -137,7 +150,13 @@ def main():
         "git_head": subprocess.check_output(
             ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True
         ).strip(),
-        "resources": "Each server: 1 CPU quota, 256 MiB, 1 worker; Knot DNS: 1 UDP + 1 TCP + 1 background worker. Client unrestricted. Shared Docker VM; no affinity.",
+        "resources": (
+            f"Each container: {args.cpus} CPU quota, {args.memory} memory limit. "
+            f"Each server: {args.workers} workers; Knot DNS: {args.workers} UDP + "
+            f"{args.workers} TCP + 1 background worker. Shared Docker VM; no affinity."
+        ),
+        "container_limits": {},
+        "roles": {"authority": AUTHORITY_ROLES, "recursive": RECURSIVE_ROLES},
         "configurations": {},
         "authority": [],
         "recursive": [],
@@ -160,11 +179,13 @@ def main():
                 CLIENT,
                 "--network",
                 NETWORK,
+                *limits,
                 "--entrypoint",
                 "sleep",
                 images["client"],
                 "infinity",
             )
+            record["container_limits"]["client"] = container_limits(CLIENT)
             record["donna_binary_sha256"] = run(
                 "exec", CLIENT, "sha256sum", "/usr/local/bin/donna"
             ).split()[0]
@@ -176,6 +197,10 @@ def main():
                 ),
                 "kresd": run(
                     "run", "--rm", "--entrypoint", "kresd", images["kresd"], "-V"
+                ),
+                "unbound": run("run", "--rm", images["unbound"], "unbound", "-V"),
+                "unbound_package": run(
+                    "run", "--rm", images["unbound"], "dpkg-query", "-W", "unbound"
                 ),
                 "rust": run("run", "--rm", "rust:bookworm", "rustc", "--version"),
             }
@@ -194,6 +219,7 @@ def main():
                         "knot": "12",
                         "hickory": "13",
                         "kresd": "14",
+                        "unbound": "15",
                     }[role]
                 )
                 files = {"zone.db": zone}
@@ -237,7 +263,7 @@ def main():
                         "named",
                         "-g",
                         "-n",
-                        "1",
+                        str(args.workers),
                         "-c",
                         "/bench/named.conf",
                         "-u",
@@ -245,14 +271,43 @@ def main():
                     ]
                 elif role == "knot":
                     files["knot.conf"] = (
-                        "server:\n    rundir: /tmp\n    listen: 0.0.0.0@53\n    udp-workers: 1\n    tcp-workers: 1\n    background-workers: 1\n"
+                        "server:\n    rundir: /tmp\n    listen: 0.0.0.0@53\n"
+                        f"    udp-workers: {args.workers}\n    tcp-workers: {args.workers}\n    background-workers: 1\n"
                         "log:\n  - target: stderr\n    any: error\ndatabase:\n    storage: /tmp/knot-db\n"
                         "zone:\n  - domain: example.test.\n    file: /bench/zone.db\n    dnssec-signing: off\n"
                     )
                     command = ["knotd", "-c", "/bench/knot.conf"]
+                elif role == "unbound":
+                    if not recursive:
+                        raise ValueError("Unbound is a recursive-only peer")
+                    files["unbound.conf"] = (
+                        "server:\n"
+                        "    interface: 0.0.0.0\n"
+                        "    do-ip6: no\n"
+                        f"    num-threads: {args.workers}\n"
+                        '    chroot: ""\n'
+                        '    username: ""\n'
+                        '    pidfile: ""\n'
+                        "    use-syslog: no\n"
+                        "    verbosity: 0\n"
+                        "    log-queries: no\n"
+                        "    log-replies: no\n"
+                        "    access-control: " + SUBNET + "0/24 allow\n"
+                        '    root-hints: "/bench/root.hints"\n'
+                        '    module-config: "iterator"\n'
+                        # Unbound serves RFC 6761 test. locally by default.
+                        '    local-zone: "test." nodefault\n'
+                        "    msg-cache-size: 4m\n"
+                        "    rrset-cache-size: 4m\n"
+                        f"    msg-cache-slabs: {1 << (args.workers - 1).bit_length()}\n"
+                        f"    rrset-cache-slabs: {1 << (args.workers - 1).bit_length()}\n"
+                    )
+                    command = ["unbound", "-d", "-c", "/bench/unbound.conf"]
                 elif recursive:
                     filename, text = configuration(
-                        "knot-resolver" if role == "kresd" else role, signed=False
+                        "knot-resolver" if role == "kresd" else role,
+                        signed=False,
+                        workers=args.workers,
                     )
                     text = text.replace("/work/", "/bench/").replace(
                         "172.29.53.0/24", SUBNET + "0/24"
@@ -269,7 +324,7 @@ def main():
                             "--config",
                             "/bench/hickory.toml",
                             "--workers",
-                            "1",
+                            str(args.workers),
                             "--port",
                             "53",
                         ]
@@ -284,7 +339,7 @@ def main():
                         "--config",
                         "/bench/hickory.toml",
                         "--workers",
-                        "1",
+                        str(args.workers),
                         "--port",
                         "53",
                     ]
@@ -303,18 +358,18 @@ def main():
                     NETWORK,
                     "--ip",
                     address,
-                    "--cpus",
-                    "1",
-                    "--memory",
-                    "256m",
+                    *limits,
                     "-e",
-                    "TOKIO_WORKER_THREADS=1",
+                    f"TOKIO_WORKER_THREADS={args.workers}",
                     "-e",
                     "RUST_LOG=error",
                     *extra,
                     images[role],
                     *command,
                 )
+                record["container_limits"][
+                    ("recursive/" if recursive else "authority/") + role
+                ] = container_limits(name)
                 with tempfile.TemporaryDirectory(prefix=PREFIX) as tmp:
                     folder = Path(tmp) / "bench"
                     folder.mkdir()
@@ -347,7 +402,7 @@ def main():
                 return address
 
             if "cli" in args.phases or "authority" in args.phases:
-                roles = ["donna", "bind", "knot", "hickory"]
+                roles = AUTHORITY_ROLES
                 addresses = {role: start(role) for role in roles}
                 if "cli" in args.phases:
                     record["cli"] = worker("cli", addresses["bind"])
@@ -355,7 +410,8 @@ def main():
                 if "authority" in args.phases:
                     for case in ("positive", "negative", "wildcard"):
                         for repeat in range(args.repeats):
-                            for role in roles[repeat % 4 :] + roles[: repeat % 4]:
+                            offset = repeat % len(roles)
+                            for role in roles[offset:] + roles[:offset]:
                                 row = worker(
                                     "load",
                                     addresses[role],
@@ -413,20 +469,18 @@ def main():
                             NETWORK,
                             "--ip",
                             SUBNET + address,
-                            "--cpus",
-                            "1",
-                            "--memory",
-                            "256m",
+                            *limits,
                             images["bind"],
                             "named",
                             "-g",
                             "-n",
-                            "1",
+                            str(args.workers),
                             "-c",
                             "/bench/named.conf",
                             "-u",
                             "root",
                         )
+                        record["container_limits"]["hierarchy/" + role] = container_limits(name)
                         run("cp", str(folder), name + ":/bench")
                         run("start", name)
                     record["configurations"]["hierarchy/" + role] = {
@@ -434,18 +488,21 @@ def main():
                         "config": config,
                     }
                     wait(SUBNET + address)
-                roles = ["donna", "bind", "kresd", "hickory"]
+                roles = RECURSIVE_ROLES
                 for repeat in range(args.cold_repeats):
-                    for role in roles[repeat % 4 :] + roles[: repeat % 4]:
+                    offset = repeat % len(roles)
+                    for role in roles[offset:] + roles[:offset]:
                         address = start(role, True)
                         row = worker("cold", address, "--recursive")
                         record["cold"].append(row | {"server": role, "repeat": repeat})
                         save()
+                        print("cold", role, round(row["elapsed_ms"], 3), flush=True)
                         remove(PREFIX + role)
                 addresses = {role: start(role, True) for role in roles}
                 for case in ("positive", "negative", "cname"):
                     for repeat in range(args.repeats):
-                        for role in roles[repeat % 4 :] + roles[: repeat % 4]:
+                        offset = repeat % len(roles)
+                        for role in roles[offset:] + roles[:offset]:
                             row = worker(
                                 "load",
                                 addresses[role],
