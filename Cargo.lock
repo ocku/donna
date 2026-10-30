@@ -416,7 +416,7 @@ dependencies = [
 
 [[package]]
 name = "dns"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "hmac",
  "p256",
@@ -431,7 +431,7 @@ dependencies = [
 
 [[package]]
 name = "donna"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "anyhow",
  "base64ct",
@@ -840,7 +840,7 @@ dependencies = [
 
 [[package]]
 name = "nameserver"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dns",
  "ring",
@@ -1199,7 +1199,7 @@ checksum = "d6f6ff9a378485b298a5286656da665ba74413d36db0979633275d2e708145d4"
 
 [[package]]
 name = "resolver"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dns",
  "hmac",
@@ -1765,7 +1765,7 @@ dependencies = [
 
 [[package]]
 name = "transport"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "base64ct",
  "bytes",

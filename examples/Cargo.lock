@@ -289,7 +289,7 @@ dependencies = [
 
 [[package]]
 name = "dns"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "hmac",
  "p256",
@@ -303,8 +303,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "donna-example-adblock"
+version = "0.1.1"
+dependencies = [
+ "dns",
+ "resolver",
+ "rustls",
+ "tokio",
+ "transport",
+ "webpki-roots",
+]
+
+[[package]]
 name = "donna-example-authority"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "crypto_box",
  "dns",
@@ -316,7 +328,7 @@ dependencies = [
 
 [[package]]
 name = "donna-example-clients"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dns",
  "ed25519-dalek",
@@ -327,7 +339,7 @@ dependencies = [
 
 [[package]]
 name = "donna-example-memory-adapters"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dns",
  "nameserver",
@@ -338,7 +350,7 @@ dependencies = [
 
 [[package]]
 name = "donna-example-recursive"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dns",
  "resolver",
@@ -348,7 +360,7 @@ dependencies = [
 
 [[package]]
 name = "donna-example-updates"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dns",
  "ed25519-dalek",
@@ -688,7 +700,7 @@ dependencies = [
 
 [[package]]
 name = "nameserver"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dns",
  "smallvec",
@@ -1014,7 +1026,7 @@ dependencies = [
 
 [[package]]
 name = "resolver"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dns",
  "hmac",
@@ -1380,7 +1392,7 @@ dependencies = [
 
 [[package]]
 name = "transport"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "base64ct",
  "bytes",
@@ -1512,6 +1524,15 @@ checksum = "5a6580f308b1fad9207618087a65c04e7a10bc77e02c8e84e9b00dd4b12fa0bb"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
+]
+
+[[package]]
+name = "webpki-roots"
+version = "1.0.11"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f5f280bbb2b287bc8e7de7e3852945a0ff50d1bbcb5ed42b6c7a568c546df171"
+dependencies = [
+ "rustls-pki-types",
 ]
 
 [[package]]

@@ -47,6 +47,7 @@ external responsibilities.
 | Commands, query controls, JSON output and diagnostics | [Client reference](docs/client.md) |
 | Every daemon setting, working configurations, lifecycle and troubleshooting | [Configuration and operation](docs/configuration.md) |
 | Container client and forwarding, recursive and authoritative servers | [Docker images](packaging/docker/README.md) |
+| Domain blocking with a local UDP/TCP listener and Quad9 DoQ upstreams | [Ad blocker example](examples/adblock/README.md) |
 | Crate boundaries, embedding, cache engines and zone publication | [Architecture](docs/architecture.md) |
 | Records, transports, cryptographic algorithms and discovery components | [Protocol scope](docs/protocols.md) |
 | Features and migration tradeoffs against dig, Knot DNS, Knot Resolver, Hickory and BIND 9 | [Comparison](docs/comparison.md) |
@@ -242,9 +243,14 @@ starting if another DNS service already uses the configured sockets.
 ## Runnable servers
 
 The [examples index](examples/README.md) starts with independent Rust packages
-for authorities, clients, recursive resolution, updates and storage adapters.
-Plain UDP/TCP examples run locally without Docker or certificates. The
-[interoperability lab](examples/interop/README.md) adds independent peers for
+for authorities, clients, recursive resolution, domain blocking, updates and
+storage adapters. Plain UDP/TCP examples run locally without Docker or
+certificates. The [ad blocker](examples/adblock/README.md) serves local UDP/TCP
+queries, blocks listed names and their subdomains, and forwards allowed queries
+to Quad9 over authenticated DNS over QUIC (DoQ). It includes a Docker image with
+a bundled domain list and requires outbound UDP port 853.
+
+The [interoperability lab](examples/interop/README.md) adds independent peers for
 all supported transports. Run it from the repository root:
 
 ```sh

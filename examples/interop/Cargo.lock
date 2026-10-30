@@ -289,7 +289,7 @@ dependencies = [
 
 [[package]]
 name = "dns"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "hmac",
  "p256",
@@ -657,7 +657,7 @@ dependencies = [
 
 [[package]]
 name = "nameserver"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dns",
  "smallvec",
@@ -983,7 +983,7 @@ dependencies = [
 
 [[package]]
 name = "resolver"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "dns",
  "hmac",
@@ -1360,7 +1360,7 @@ dependencies = [
 
 [[package]]
 name = "transport"
-version = "0.1.0"
+version = "0.1.1"
 dependencies = [
  "base64ct",
  "bytes",

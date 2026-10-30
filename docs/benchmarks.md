@@ -2,18 +2,20 @@
 
 **Donna is vibe coded with AI assistance and is not production ready.** These
 measurements do not establish reliability comparable to dig, BIND 9, Knot DNS,
-Knot Resolver, or Hickory. Prefer those projects over Donna for production use
-in their respective roles. See the [AI notice](../README.md#ai-notice-and-production-readiness).
+Knot Resolver, Hickory, or Unbound. Prefer those projects over Donna for
+production use in their respective roles. See the [AI notice](../README.md#ai-notice-and-production-readiness).
 
 These measurements compare Donna's shipped executable with dig, BIND 9,
-Knot DNS, Knot Resolver and Hickory in the roles they share. The run uses a
-private DNS hierarchy and includes correctness gates. It measures command
+Knot DNS, Knot Resolver, Hickory and Unbound in the roles they share. The runs use
+a private DNS hierarchy and include correctness gates. They measure command
 startup/query cost, unsigned authoritative UDP service, unsigned recursive
 cache hits, and the first query through a fresh resolver process.
 
-The [retained JSON report](benchmarks/results/2026-10-29.json) contains individual
-trials, runtime image identities, the Donna binary hash, source hashes, complete
-configurations and response references. The [runner](benchmarks/run.py),
+The retained JSON reports for [CLI/authority](benchmarks/results/2026-10-29.json)
+and [recursive/cold queries](benchmarks/results/2026-10-30-recursive.json) contain
+individual trials, runtime image identities, the Donna binary hash, source
+hashes, complete configurations and response references. The recursive
+comparison was rerun with all five resolvers when Unbound was added. The [runner](benchmarks/run.py),
 [measurement worker](benchmarks/worker.py), and
 [table generator](benchmarks/summarize.py) are checked in. The
 [feature comparison](comparison.md) describes operational capabilities that
@@ -24,16 +26,20 @@ these throughput tests do not measure.
 | Parameter | Recorded setting |
 | --- | --- |
 | Host | Apple M4; Docker through Colima, Linux ARM64 |
-| Docker VM | 2 vCPUs, 2053648384 bytes RAM, Linux 6.8.0-117-generic |
+| Docker VM, CLI/authority (October 29) | 2 vCPUs, 2053648384 bytes RAM, Linux 6.8.0-117-generic |
+| Docker VM, recursive/cold (October 30) | 6 vCPUs, 8306720768 bytes RAM, Linux 6.8.0-117-generic |
 | Donna build | 0.1.0, Rust 1.99.1; locked release build, thin LTO, one codegen unit |
-| BIND server | 9.18.49-1~deb12u2-Debian |
+| BIND server, CLI/authority | 9.18.49-1~deb12u2-Debian |
+| BIND server, recursive/cold | 9.18.49-1~deb12u3-Debian |
 | dig client | 9.20.30-1~deb13u1-Debian; distinct from the BIND server package |
 | Knot DNS | 3.6.2 |
 | Knot Resolver | 6.5.1 |
 | Hickory | 0.26.3, revision `bd37cafbdd86112a6da32878f8c9bab22e14377e` |
-| Server resources | Each container: 1 CPU quota, 256 MiB, one configured worker |
+| Unbound | 1.17.1-2+deb12u4, Debian Bookworm package |
+| Server resources, CLI/authority | Each container: 1 CPU quota, 256 MiB, one configured worker |
+| Container resources, recursive/cold | Each container: 4 CPU quota, 4 GiB RAM limit; each server: four configured workers |
 | Knot DNS worker layout | One UDP worker, one TCP worker, one background worker, within the same container quota |
-| Client | Unrestricted container on the same Docker bridge; no CPU affinity |
+| Client | Same Docker bridge; unrestricted for CLI/authority, 4 CPU quota and 4 GiB for recursive/cold; no CPU affinity |
 | Timed server load | 32 outstanding UDP queries, closed loop, three 3-second trials per workload/server |
 | Order | Rotated by repetition; one timed load client at a time |
 | Signing/validation | Unsigned zone and hierarchy; recursive validation explicitly disabled for every resolver |
@@ -125,26 +131,35 @@ before load. Queries use EDNS payload 1232, DO clear and RD set.
 Donna retains its default capacity of 4096 entries per native cache. Knot
 Resolver has a 64 MiB cache and minimum TTL zero; Hickory uses 1024 nameserver
 and 65536 response entries. BIND retains its default cache sizing within the
-container limit. These are different cache implementations and retention
+container limit. Unbound uses a 4 MiB message cache and a 4 MiB RRset cache,
+each with four slabs. These are different cache implementations and retention
 budgets. The one-question workload fits every cache; it does not establish
 equal memory use, eviction behavior or cache efficiency under churn.
+
+Unbound uses `module-config: "iterator"` to disable validation and
+`local-zone: "test." nodefault` to resolve the lab's `test.` hierarchy instead
+of serving its built-in local zone. These settings follow the
+[Unbound configuration manual](https://unbound.docs.nlnetlabs.nl/en/latest/manpages/unbound.conf.html).
 
 <!-- BEGIN RECURSIVE TABLE -->
 
 | Server | Workload | Median q/s | Min to max q/s | Mean latency, µs |
 | --- | --- | ---: | ---: | ---: |
-| Donna | positive | 590,219 | 588,044 to 602,266 | 54.1 |
-| BIND 9 | positive | 358,320 | 351,257 to 365,191 | 89.1 |
-| Knot Resolver | positive | 187,609 | 187,190 to 188,735 | 170.4 |
-| Hickory | positive | 197,144 | 191,074 to 202,091 | 162.2 |
-| Donna | negative | 504,998 | 500,278 to 522,986 | 63.2 |
-| BIND 9 | negative | 339,682 | 337,752 to 350,161 | 94.0 |
-| Knot Resolver | negative | 182,659 | 174,435 to 187,574 | 175.0 |
-| Hickory | negative | 150,663 | 149,465 to 151,172 | 212.3 |
-| Donna | cname | 486,135 | 483,286 to 498,560 | 65.7 |
-| BIND 9 | cname | 294,067 | 275,724 to 294,861 | 108.6 |
-| Knot Resolver | cname | 161,469 | 160,450 to 162,381 | 198.0 |
-| Hickory | cname | 176,007 | 170,906 to 180,299 | 181.7 |
+| Donna | positive | 727,141 | 706,415 to 735,810 | 43.8 |
+| BIND 9 | positive | 353,208 | 350,263 to 355,003 | 90.4 |
+| Knot Resolver | positive | 188,702 | 187,454 to 189,112 | 169.4 |
+| Hickory | positive | 306,808 | 301,992 to 308,373 | 104.0 |
+| Unbound | positive | 510,502 | 507,773 to 519,720 | 62.6 |
+| Donna | negative | 520,032 | 483,562 to 617,105 | 61.3 |
+| BIND 9 | negative | 332,131 | 327,197 to 334,238 | 96.2 |
+| Knot Resolver | negative | 178,236 | 166,498 to 178,775 | 179.3 |
+| Hickory | negative | 269,053 | 211,597 to 269,161 | 118.6 |
+| Unbound | negative | 466,322 | 453,489 to 468,775 | 68.6 |
+| Donna | cname | 475,866 | 474,196 to 500,398 | 67.0 |
+| BIND 9 | cname | 276,680 | 260,893 to 290,142 | 115.5 |
+| Knot Resolver | cname | 159,081 | 153,067 to 162,652 | 201.0 |
+| Hickory | cname | 272,506 | 222,414 to 283,720 | 117.1 |
+| Unbound | cname | 442,916 | 441,445 to 455,742 | 72.2 |
 
 <!-- END RECURSIVE TABLE -->
 
@@ -162,10 +177,11 @@ service startup time.
 
 | Resolver | Cold median ms | Min to max ms |
 | --- | ---: | ---: |
-| Donna | 1.331 | 1.002 to 1.849 |
-| BIND 9 | 1.853 | 1.377 to 3.010 |
-| Knot Resolver | 1.518 | 1.086 to 2.153 |
-| Hickory | 1.396 | 1.092 to 1.637 |
+| Donna | 1.220 | 1.181 to 1.533 |
+| BIND 9 | 1.576 | 1.451 to 1.971 |
+| Knot Resolver | 1.123 | 1.097 to 1.226 |
+| Hickory | 1.383 | 1.316 to 1.749 |
+| Unbound | 1.237 | 1.173 to 1.298 |
 
 <!-- END COLD TABLE -->
 
@@ -190,11 +206,13 @@ traffic-generation infrastructure beyond this lab. Short runs with one client
 and a small set of questions cannot establish behavior under that load or the
 long-term reliability of a deployed service.
 
-The throughput client is a single native process with a fixed window. It does
-not sweep offered load or identify the maximum sustainable rate at an explicit
-latency target. The shared two-vCPU VM, container quotas, bridge networking and
-host scheduling can limit both client and server. Three trials describe local
-variation; they are not confidence intervals.
+The throughput client is a single native process with one UDP flow and a fixed
+window. A single flow may exercise fewer than four server workers; these results
+do not establish scaling across four cores. The client does not sweep offered
+load or identify the maximum sustainable rate at an explicit
+latency target. The shared VM (two vCPUs for CLI/authority, six for recursive),
+container quotas, bridge networking and host scheduling can limit both client
+and server. Three trials describe local variation; they are not confidence intervals.
 
 The experiment does not measure cryptographic validation, pre-signed authority
 performance, encrypted handshake/session throughput, large-zone lookup, broad
@@ -217,6 +235,7 @@ independent peers:
 docker build -f examples/interop/docker/Bind.Dockerfile -t donna-interop-bind .
 docker build -f examples/interop/docker/Hickory.Dockerfile -t donna-interop-hickory:0.26.3 .
 docker build -f examples/interop/docker/KnotResolver.Dockerfile -t donna-interop-knot-resolver:6.5.1 .
+docker build -f examples/interop/docker/Unbound.Dockerfile -t donna-interop-unbound .
 docker pull cznic/knot:3.6
 docker build -f examples/interop/docker/CacheClient.Dockerfile -t donna-interop-cache-client .
 docker build -f examples/interop/docker/Donna.Dockerfile -t donna-docs:local .
@@ -224,6 +243,7 @@ docker build -f docs/benchmarks/Client.Dockerfile -t donna-docs-client:local .
 
 docker run --rm --network none --entrypoint python donna-docs-client:local \
   -m unittest discover -s /suite -p test_documentation_worker.py
+python3 -m unittest discover -s docs/benchmarks -p test_summarize.py
 python3 docs/benchmarks/run.py --output examples/interop/.artifacts/documentation.json
 python3 docs/benchmarks/summarize.py examples/interop/.artifacts/documentation.json
 ```
@@ -233,13 +253,18 @@ and subnet `172.30.93.0/24`. It uses the lab lock, copies configuration through
 Docker, and removes its resources in `finally`. Do not allocate that namespace
 to another workload. `--phases`, `--seconds`, `--repeats` and `--cold-repeats`
 select bounded subsets; an altered run must be labeled with its parameters.
+The October 30 recursive report uses `--phases recursive --cpus 4 --memory 4g
+--workers 4` with three 3-second trials and five cold observations per resolver.
+The resource options apply to every container, including the client and the
+private hierarchy. The older CLI/authority report used one server worker,
+one CPU quota and 256 MiB per server.
 
 Rebuilding later can select newer distribution packages or mutable image tags.
 The recorded image IDs, source hashes and version strings identify the measured
 run; the commands reproduce the experiment rather than promise identical
 package bytes on a future date. Rebuild both Donna images after changing Donna
 source so the server/client identity check remains meaningful. Keep new outputs
-in `.artifacts/`; the checked-in report is the curated evidence for these tables.
+in `.artifacts/`; the checked-in reports are the curated evidence for these tables.
 
 For signed workloads, diversity, memory and detailed packet replay, use the
 [existing lab recipes](../examples/interop/docs/recipes.md). In-process wire,

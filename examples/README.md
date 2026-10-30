@@ -12,6 +12,7 @@ includes runnable comparisons and retained measurements.
 | Serve a zone over UDP/TCP | [authority](authority/README.md) | Rust; includes its own zone |
 | Query a chosen nameserver | [clients](clients/README.md) | Rust; a running DNS endpoint |
 | Run or embed an iterative resolver | [recursive](recursive/README.md) | Rust; an explicit root server |
+| Block ad domains and forward allowed queries to Quad9 over DoQ | [ad blocker](adblock/README.md) | Docker, or Rust and a domain list; outbound UDP 853 |
 | Persist authenticated updates and send NOTIFY | [updates](updates/README.md) | Rust; optional NOTIFY endpoint |
 | Supply application-owned cache/zone storage | [memory adapters](adapters/memory/README.md) | Rust; runs entirely in process |
 | Supply Redis/PostgreSQL storage | [remote adapters](adapters/remote/README.md) | Docker |
@@ -38,9 +39,12 @@ The examples below retain public API hooks for applications embedding Donna.
 Each application owns its source, configuration and fixtures. The separate
 [examples workspace](Cargo.toml) shares a lockfile and build directory; select a
 package with `-p` to build only its dependencies. Plain clients/authorities and
-recursive/update examples enable UDP/TCP only. Encrypted listeners and clients
-require their package's `encrypted` feature. The memory adapter enables no
-socket transport. No application imports the interop library or another demo.
+recursive/update examples enable UDP/TCP only. The authority and client
+examples require their package's `encrypted` feature for encrypted transports.
+The ad blocker enables DoQ upstreams by default, with UDP/TCP client listeners;
+it verifies Quad9's `dns.quad9.net` certificate using bundled public roots.
+The memory adapter enables no socket transport. No application imports the
+interop library or another demo.
 
 `interop/` remains a separate workspace for probes, profilers and integration
 checks. Its existing binary names alias the application sources, so Docker binary

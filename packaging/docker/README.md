@@ -5,6 +5,12 @@ images support controlled evaluation; they do not change the
 [production-readiness notice](../../README.md#ai-notice-and-production-readiness).
 Prefer the established DNS implementations named there for production.
 
+For a container that blocks ad domains locally and forwards allowed queries
+to Quad9 over DNS over QUIC, use the separate
+[ad blocker example](../../examples/adblock/README.md). It bundles a domain
+list, serves UDP/TCP on port 5353, and uses authenticated DoQ upstreams on UDP
+port 853.
+
 ## Build
 
 Run from the repository root:

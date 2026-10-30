@@ -1,0 +1,19 @@
+[package]
+name = "donna-example-adblock"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+authors.workspace = true
+publish.workspace = true
+
+[dependencies]
+dns.workspace = true
+resolver.workspace = true
+rustls.workspace = true
+tokio.workspace = true
+transport = { workspace = true, features = ["udp", "tcp", "doq"] }
+webpki-roots = "1"
+
+[[bin]]
+name = "adblock"
+path = "src/main.rs"

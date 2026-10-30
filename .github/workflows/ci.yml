@@ -2,8 +2,6 @@ name: CI
 
 on:
   push:
-  pull_request:
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -66,6 +64,8 @@ jobs:
         env:
           PYTHONPATH: examples/interop
         run: python3 -m unittest discover -s examples/interop/tests -p 'test_*.py'
+      - name: Test benchmark report gates
+        run: python3 -m unittest discover -s docs/benchmarks -p test_summarize.py
 
   containers:
     name: Container packaging
